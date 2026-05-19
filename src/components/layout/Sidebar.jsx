@@ -8,24 +8,37 @@ import {
 } from 'lucide-react';
 import { useTheme } from '../ThemeProvider';
 import { Sun, Moon } from 'lucide-react';
-import { api } from '@/api/apiClient';
-
-const navItems = [
-  { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
-  { path: '/student', icon: GraduationCap, label: 'Student Hub' },
-  { path: '/tutor', icon: Users, label: 'Tutor Hub' },
-  { path: '/projects', icon: FolderKanban, label: 'Project Track' },
-  { path: '/calendar', icon: CalendarDays, label: 'Calendar' },
-  { path: '/booking', icon: BookOpen, label: 'Booking' },
-  { path: '/chatbot', icon: Bot, label: 'AI Assistant' },
-  { path: '/notifications', icon: Bell, label: 'Notifications' },
-  { path: '/settings', icon: Settings, label: 'Settings' },
-];
+import { useAuth } from '@/lib/AuthContext';
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { user } = useAuth();
+
+  const role = user?.role || 'student';
+
+  const menuItems = [];
+  if (role === 'tutor') {
+    menuItems.push(
+      { path: '/tutor', icon: LayoutDashboard, label: 'Dashboard' },
+      { path: '/projects', icon: FolderKanban, label: 'Project Track' },
+      { path: '/calendar', icon: CalendarDays, label: 'Calendar' },
+      { path: '/booking', icon: BookOpen, label: 'Booking' },
+      { path: '/chatbot', icon: Bot, label: 'AI Assistant' },
+      { path: '/notifications', icon: Bell, label: 'Notifications' },
+      { path: '/settings', icon: Settings, label: 'Settings' },
+    );
+  } else {
+    menuItems.push(
+      { path: '/student', icon: LayoutDashboard, label: 'Dashboard' },
+      { path: '/calendar', icon: CalendarDays, label: 'Calendar' },
+      { path: '/booking', icon: BookOpen, label: 'Booking' },
+      { path: '/chatbot', icon: Bot, label: 'AI Assistant' },
+      { path: '/notifications', icon: Bell, label: 'Notifications' },
+      { path: '/settings', icon: Settings, label: 'Settings' },
+    );
+  }
 
   return (
     <motion.aside
@@ -54,8 +67,10 @@ export default function Sidebar() {
 
       {/* Nav Items */}
       <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
+        {menuItems.map((item) => {
+          const isActive = location.pathname === item.path || 
+            (item.path === '/tutor' && location.pathname === '/') || 
+            (item.path === '/student' && location.pathname === '/');
           return (
             <Link key={item.path} to={item.path}>
               <motion.div

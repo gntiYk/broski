@@ -6,22 +6,35 @@ import {
   CalendarDays, BookOpen, MessageCircle, Bot, Bell,
   Settings, X, Sparkles, LogOut
 } from 'lucide-react';
-import { api } from '@/api/apiClient';
-
-const navItems = [
-  { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
-  { path: '/student', icon: GraduationCap, label: 'Student' },
-  { path: '/tutor', icon: Users, label: 'Tutor' },
-  { path: '/projects', icon: FolderKanban, label: 'Project' },
-  { path: '/calendar', icon: CalendarDays, label: 'Calendar' },
-  { path: '/booking', icon: BookOpen, label: 'Booking' },
-  { path: '/chatbot', icon: Bot, label: 'AI Assistant' },
-  { path: '/notifications', icon: Bell, label: 'Notifications' },
-  { path: '/settings', icon: Settings, label: 'Settings' },
-];
+import { useAuth } from '@/lib/AuthContext';
 
 export default function MobileSidebar({ open, onClose }) {
   const location = useLocation();
+  const { user } = useAuth();
+
+  const role = user?.role || 'student';
+
+  const menuItems = [];
+  if (role === 'tutor') {
+    menuItems.push(
+      { path: '/tutor', icon: LayoutDashboard, label: 'Dashboard' },
+      { path: '/projects', icon: FolderKanban, label: 'Project Track' },
+      { path: '/calendar', icon: CalendarDays, label: 'Calendar' },
+      { path: '/booking', icon: BookOpen, label: 'Booking' },
+      { path: '/chatbot', icon: Bot, label: 'AI Assistant' },
+      { path: '/notifications', icon: Bell, label: 'Notifications' },
+      { path: '/settings', icon: Settings, label: 'Settings' },
+    );
+  } else {
+    menuItems.push(
+      { path: '/student', icon: LayoutDashboard, label: 'Dashboard' },
+      { path: '/calendar', icon: CalendarDays, label: 'Calendar' },
+      { path: '/booking', icon: BookOpen, label: 'Booking' },
+      { path: '/chatbot', icon: Bot, label: 'AI Assistant' },
+      { path: '/notifications', icon: Bell, label: 'Notifications' },
+      { path: '/settings', icon: Settings, label: 'Settings' },
+    );
+  }
 
   return (
     <AnimatePresence>
@@ -55,8 +68,10 @@ export default function MobileSidebar({ open, onClose }) {
               </button>
             </div>
             <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
-              {navItems.map((item) => {
-                const isActive = location.pathname === item.path;
+              {menuItems.map((item) => {
+                const isActive = location.pathname === item.path || 
+                  (item.path === '/tutor' && location.pathname === '/') || 
+                  (item.path === '/student' && location.pathname === '/');
                 return (
                   <Link key={item.path} to={item.path} onClick={onClose}>
                     <div className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${isActive
