@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { api } from "@/api/apiClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { LogIn, Mail, Lock, Loader2, GraduationCap, UserSquare2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -14,6 +15,9 @@ export default function Login() {
   const [role, setRole] = useState("student");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  
+  const { checkUserAuth } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,7 +25,8 @@ export default function Login() {
     setLoading(true);
     try {
       await api.auth.loginViaEmailPassword(email, password, role);
-      window.location.href = role === "tutor" ? "/tutor" : "/student";
+      await checkUserAuth();
+      navigate(role === "tutor" ? "/tutor" : "/student");
     } catch (err) {
       setError(err.message || "Invalid email or password");
     } finally {
@@ -29,8 +34,14 @@ export default function Login() {
     }
   };
 
-  const handleGoogle = () => {
-    api.auth.loginWithProvider("google", role === "tutor" ? "/tutor" : "/student");
+  const handleGoogle = async () => {
+    try {
+      await api.auth.loginWithProvider("google", role === "tutor" ? "/tutor" : "/student");
+      await checkUserAuth();
+      navigate(role === "tutor" ? "/tutor" : "/student");
+    } catch (err) {
+      setError("Google authentication failed");
+    }
   };
 
   return (
@@ -116,7 +127,7 @@ export default function Login() {
           <div className="flex items-center justify-between">
             <Label htmlFor="password">Password</Label>
             <Link to="/forgot-password" className="text-xs text-primary hover:underline">
-              Forgot password?
+              Нууц үг мартсан
             </Link>
           </div>
           <div className="relative">

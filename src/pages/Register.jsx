@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { api } from "@/api/apiClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { UserPlus, Mail, Lock, User, Loader2, GraduationCap, UserSquare2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -16,13 +17,17 @@ export default function Register() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const { checkUserAuth } = useAuth();
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
     try {
       await api.auth.register(email, password, name, role);
-      window.location.href = role === "tutor" ? "/tutor" : "/student";
+      await checkUserAuth();
+      navigate(role === "tutor" ? "/tutor" : "/student");
     } catch (err) {
       setError(err.message || "Failed to create account");
     } finally {
@@ -30,8 +35,14 @@ export default function Register() {
     }
   };
 
-  const handleGoogle = () => {
-    api.auth.loginWithProvider("google", role === "tutor" ? "/tutor" : "/student");
+  const handleGoogle = async () => {
+    try {
+      await api.auth.loginWithProvider("google", role === "tutor" ? "/tutor" : "/student");
+      await checkUserAuth();
+      navigate(role === "tutor" ? "/tutor" : "/student");
+    } catch (err) {
+      setError("Google authentication failed");
+    }
   };
 
   return (
