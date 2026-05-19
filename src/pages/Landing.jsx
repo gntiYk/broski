@@ -48,7 +48,7 @@ export default function Landing() {
           </div>
           <div className="flex items-center gap-3">
             <Link to="/login"><Button variant="ghost" size="sm">Нэвтрэх</Button></Link>
-            <Link to="/register"><Button size="sm">Эхлэх</Button></Link>
+            <Link to="/register"><Button size="sm">Бүртгүүлэх</Button></Link>
           </div>
         </div>
       </nav>
@@ -74,7 +74,7 @@ export default function Landing() {
             <motion.div variants={fadeUp} custom={3} className="flex flex-wrap justify-center gap-3">
               <Link to="/register">
                 <Button size="lg" className="px-8 gap-2">
-                  Эхлэх <ArrowRight className="w-4 h-4" />
+                  Бүртгүүлэх <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
               <Link to="/login">
@@ -86,46 +86,6 @@ export default function Landing() {
           </motion.div>
         </div>
       </section>
-
-
-
-      {/* Features */}
-      <section className="py-20 px-4 sm:px-6">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl font-heading font-bold">CAS-ийг амжилттай хэрэгжүүлэхэд хэрэгтэй бүх зүйл</h2>
-            <p className="text-muted-foreground mt-2 max-w-xl mx-auto">IB хөтөлбөрийн сурагчид, багш нар болон зохицуулагч нарт зориулсан хүчирхэг хэрэгслүүд</p>
-          </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((f, i) => (
-              <motion.div
-                key={f.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                whileHover={{ y: -4 }}
-                className="bg-card rounded-xl border border-border p-6 hover:shadow-xl transition-shadow"
-              >
-                <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center mb-4">
-                  <f.icon className="w-5 h-5 text-primary" />
-                </div>
-                <h3 className="font-heading font-semibold">{f.title}</h3>
-                <p className="text-sm text-muted-foreground mt-2">{f.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-
-
-
 
       {/* Footer */}
       <footer className="border-t border-border py-10 px-4 sm:px-6">
