@@ -67,8 +67,8 @@ export default function Landing() {
           >
 
             <motion.h1 variants={fadeUp} custom={1} className="text-4xl sm:text-5xl lg:text-6xl font-heading font-extrabold leading-tight tracking-tight">
-              CAS аяллаа{' '}
-              <span className="gradient-text">ухаалгаар төлөвлөөрэй</span>
+              Manage your CAS journey{' '}
+              <span className="gradient-text">smarter</span>
             </motion.h1>
 
             <motion.div variants={fadeUp} custom={3} className="flex flex-wrap justify-center gap-3">
