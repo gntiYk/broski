@@ -54,7 +54,7 @@ const AuthenticatedApp = () => {
 const RoleBasedHome = () => {
   const { user } = useAuth();
   if (user?.role === 'tutor') return <Navigate to="/tutor" replace />;
-  if (user?.role === 'student') return <Navigate to="/student" replace />;
+  if (user?.role === 'student') return <Navigate to="/booking" replace />;
   return <Navigate to="/welcome" replace />;
 };
 

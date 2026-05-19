@@ -44,38 +44,17 @@ export default function ProjectTrack() {
   const [logHoursId, setLogHoursId] = useState(null);
   const [hoursToLog, setHoursToLog] = useState('');
 
-  // Fetch list of students if tutor/admin
-  const { data: students = [] } = useQuery({
-    queryKey: ['students-list'],
-    queryFn: async () => {
-      const users = await api.entities.User.list();
-      return users.filter(u => u.role === 'student');
-    },
-    enabled: user?.role === 'tutor',
-  });
-
-  const [selectedStudentEmail, setSelectedStudentEmail] = useState('');
-
-  // Automatically select first student if not set
-  React.useEffect(() => {
-    if (user?.role === 'tutor' && !selectedStudentEmail && students.length > 0) {
-      setSelectedStudentEmail(students[0].email);
-    }
-  }, [students, selectedStudentEmail, user]);
-
-  const targetEmail = user?.role === 'tutor' ? selectedStudentEmail : user?.email;
-
   // Fetch projects
   const { data: projects = [], isLoading } = useQuery({
-    queryKey: ['projects', targetEmail],
-    queryFn: () => api.entities.Project.filter({ student_email: targetEmail }, '-created_date', 200),
-    enabled: !!targetEmail,
+    queryKey: ['projects', user?.email],
+    queryFn: () => api.entities.Project.filter({ student_email: user?.email }, '-created_date', 200),
+    enabled: !!user?.email,
   });
 
   const createProject = useMutation({
-    mutationFn: (data) => api.entities.Project.create({ ...data, student_email: targetEmail }),
+    mutationFn: (data) => api.entities.Project.create({ ...data, student_email: user?.email }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['projects', targetEmail] });
+      queryClient.invalidateQueries({ queryKey: ['projects', user?.email] });
       setDialogOpen(false);
       toast.success('Project created');
     },
@@ -84,7 +63,7 @@ export default function ProjectTrack() {
   const updateProject = useMutation({
     mutationFn: ({ id, data }) => api.entities.Project.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['projects', targetEmail] });
+      queryClient.invalidateQueries({ queryKey: ['projects', user?.email] });
       setDialogOpen(false);
       setLogHoursId(null);
       toast.success('Saved');
@@ -94,7 +73,7 @@ export default function ProjectTrack() {
   const deleteProject = useMutation({
     mutationFn: (id) => api.entities.Project.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['projects', targetEmail] });
+      queryClient.invalidateQueries({ queryKey: ['projects', user?.email] });
       toast.success('Project deleted');
     },
   });
@@ -139,29 +118,9 @@ export default function ProjectTrack() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       <SectionHeader
-        title={user?.role === 'tutor' ? "Student Track" : "Project Track"}
-        subtitle={user?.role === 'tutor' ? "Track student CAS project logs, hours, and reflections" : "Log CAS hours, manage projects, and track your progress"}
-        action={
-          user?.role === 'tutor' ? (
-            <div className="flex items-center gap-3">
-              <span className="text-xs font-semibold text-muted-foreground whitespace-nowrap">Сурагч сонгох:</span>
-              <Select value={selectedStudentEmail} onValueChange={setSelectedStudentEmail}>
-                <SelectTrigger className="w-56 bg-card border border-border">
-                  <SelectValue placeholder="Сонгох" />
-                </SelectTrigger>
-                <SelectContent>
-                  {students.map(s => (
-                    <SelectItem key={s.email} value={s.email}>
-                      {s.full_name || s.email}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          ) : (
-            <Button onClick={openCreate}><Plus className="w-4 h-4 mr-2" /> New Project</Button>
-          )
-        }
+        title="Project Track"
+        subtitle="Log CAS hours, manage projects, and track your progress"
+        action={<Button onClick={openCreate}><Plus className="w-4 h-4 mr-2" /> New Project</Button>}
       />
 
       {/* ── Overall progress banner ── */}
