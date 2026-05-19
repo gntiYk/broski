@@ -10,7 +10,7 @@ import { useAuth } from '@/lib/AuthContext';
 
 export default function MobileSidebar({ open, onClose }) {
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   const role = user?.role || 'student';
 
@@ -87,7 +87,7 @@ export default function MobileSidebar({ open, onClose }) {
             </nav>
             <div className="px-3 py-4 border-t border-sidebar-border">
               <button
-                onClick={() => api.auth.logout()}
+                onClick={() => logout()}
                 className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground/70 hover:bg-destructive/10 hover:text-destructive transition-colors w-full"
               >
                 <LogOut className="w-5 h-5" />
