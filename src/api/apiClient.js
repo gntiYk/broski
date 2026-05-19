@@ -89,7 +89,7 @@ export const api = {
           return "Gemini API key is missing. Please add VITE_GEMINI_API_KEY to your .env file.";
         }
         const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+          `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
           {
             method: 'POST',
             headers: {
