@@ -1,16 +1,116 @@
-// Generic API Client Wrapper
-// Replace these with actual fetch/axios calls to your new backend (Firebase, Supabase, Node, etc.)
+
+const getStorageItem = (key, defaultVal = []) => {
+  try {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) : defaultVal;
+  } catch {
+    return defaultVal;
+  }
+};
+
+const setStorageItem = (key, val) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(val));
+  } catch (e) {
+    console.error("Storage write failed", e);
+  }
+};
+
+const createPersistence = (storageKey) => {
+  return {
+    list: async () => {
+      return getStorageItem(storageKey);
+    },
+    filter: async (filters = {}, sort, limit) => {
+      let items = getStorageItem(storageKey);
+      if (filters) {
+        items = items.filter(item => {
+          return Object.entries(filters).every(([key, value]) => {
+            if (value === undefined || value === null) return true;
+            return item[key] === value;
+          });
+        });
+      }
+      return items;
+    },
+    create: async (data) => {
+      const items = getStorageItem(storageKey);
+      const newItem = { id: Math.random().toString(), created_date: new Date().toISOString(), ...data };
+      items.push(newItem);
+      setStorageItem(storageKey, items);
+      return newItem;
+    },
+    update: async (id, data) => {
+      const items = getStorageItem(storageKey);
+      const idx = items.findIndex(item => item.id === id);
+      if (idx !== -1) {
+        items[idx] = { ...items[idx], ...data };
+        setStorageItem(storageKey, items);
+        return items[idx];
+      }
+      return { id, ...data };
+    },
+    delete: async (id) => {
+      let items = getStorageItem(storageKey);
+      items = items.filter(item => item.id !== id);
+      setStorageItem(storageKey, items);
+      return { id };
+    }
+  };
+};
+
+// Initialize beautiful demo data if empty
+if (!localStorage.getItem('broski_projects')) {
+  localStorage.setItem('broski_projects', JSON.stringify([
+    { id: 'p1', student_email: 'student@example.com', title: 'Шинэ Үе ногоон төгөл', description: 'Сургуулийнхаа цэцэрлэгт мод тарьж нийгмийн тустай үйлс хийх төсөл.', category: 'service', status: 'in_progress', hours_logged: 15, target_hours: 50, start_date: '2026-05-01', end_date: '2026-06-30', reflections: 'Төсөл маань амжилттай үргэлжилж байгаа. Мод тарихаас гадна зүлэгжүүлэлт хийж байна.' },
+    { id: 'p2', student_email: 'student@example.com', title: 'Вэбсайт хөгжүүлэлт', description: 'Сургуулийн мэдээллийн вэбсайт бэлтгэж, мэдээ мэдээллийг нийтлэх.', category: 'creativity', status: 'completed', hours_logged: 40, target_hours: 40, start_date: '2026-04-10', end_date: '2026-05-15', reflections: 'Маш сонирхолтой бүтээлч ажил байлаа.' },
+    { id: 'p3', student_email: 'student@example.com', title: 'Сагсан бөмбөгийн тэмцээн', description: 'Сургуулийн анги хоорондын тэмцээнд оролцож спортоор хичээллэх.', category: 'activity', status: 'in_progress', hours_logged: 12, target_hours: 30, start_date: '2026-05-10', end_date: '2026-05-25', reflections: 'Идэвхтэй дасгал хөдөлгөөн хийж байна.' },
+    { id: 'p4', student_email: 'student2@example.com', title: 'Сургалтын аппликейшн бүтээх', description: 'Хүүхдүүдэд тоо бодож сурахад нь зориулсан интерактив тоглоом хөгжүүлэх.', category: 'creativity', status: 'in_progress', hours_logged: 30, target_hours: 50, start_date: '2026-05-01', end_date: '2026-06-15', reflections: 'Код бичих явцдаа их зүйл суралцаж байна.' },
+    { id: 'p5', student_email: 'student2@example.com', title: 'Асрамжийн газарт туслах', description: 'Асрамжийн газрын хүүхдүүдэд ном уншиж өгөх болон Англи хэл заах.', category: 'service', status: 'completed', hours_logged: 50, target_hours: 50, start_date: '2026-03-01', end_date: '2026-04-30', reflections: 'Хүүхдүүдэд туслах маш сайхан мэдрэмж байсан.' }
+  ]));
+}
+
+if (!localStorage.getItem('broski_bookings')) {
+  localStorage.setItem('broski_bookings', JSON.stringify([
+    { id: 'b1', student_email: 'student@example.com', student_name: 'Сурагч Дорж', tutor_email: 'tutor@example.com', subject: 'Математикийн давтлага', status: 'pending', date: '2026-05-20', time_slot: '14:00 - 15:00', notes: 'Тэгшитгэл бодох болон интегралын тухай давтах хүсэлтэй байна.' },
+    { id: 'b2', student_email: 'student2@example.com', student_name: 'Сурагч Сарнай', tutor_email: 'tutor@example.com', subject: 'Физикийн хичээл', status: 'approved', date: '2026-05-21', time_slot: '16:00 - 17:00', notes: 'Ньютоны хуулиудын дадлага даалгавар бодно.' }
+  ]));
+}
+
+if (!localStorage.getItem('broski_users')) {
+  localStorage.setItem('broski_users', JSON.stringify([
+    { email: 'student@example.com', full_name: 'Сурагч Дорж', role: 'student' },
+    { email: 'student2@example.com', full_name: 'Сурагч Сарнай', role: 'student' },
+    { email: 'tutor@example.com', full_name: 'Tutor Зориг', role: 'tutor' }
+  ]));
+}
 
 export const api = {
   auth: {
     loginViaEmailPassword: async (email, password, role = 'student') => {
       console.log('Mock login:', email, 'Role:', role);
-      const user = { id: Math.random().toString(), email, role };
+      
+      // Save user to users persistence if not present
+      const users = getStorageItem('broski_users');
+      let registered = users.find(u => u.email === email);
+      if (!registered) {
+        registered = { email, full_name: email.split('@')[0], role };
+        users.push(registered);
+        setStorageItem('broski_users', users);
+      }
+      
+      const user = { id: Math.random().toString(), email, role, full_name: registered.full_name };
       localStorage.setItem('mock_user', JSON.stringify(user));
       return { user };
     },
     register: async (email, password, name, role) => {
       console.log('Mock register:', email, role);
+      
+      const users = getStorageItem('broski_users');
+      const registered = { email, full_name: name, role };
+      users.push(registered);
+      setStorageItem('broski_users', users);
+      
       const user = { id: Math.random().toString(), email, full_name: name, role };
       localStorage.setItem('mock_user', JSON.stringify(user));
       return { user };
@@ -29,7 +129,7 @@ export const api = {
     },
     loginWithProvider: (provider, redirectUrl) => {
       console.log('Mock login with provider:', provider);
-      const user = { id: '1', email: 'google@example.com', role: 'student' };
+      const user = { id: '1', email: 'student@example.com', role: 'student', full_name: 'Сурагч Дорж' };
       localStorage.setItem('mock_user', JSON.stringify(user));
       window.location.href = redirectUrl || '/student';
     },
@@ -38,56 +138,18 @@ export const api = {
     }
   },
   entities: {
-    Project: {
-      list: async () => [],
-      filter: async () => [],
-      create: async (data) => ({ id: Math.random(), ...data }),
-      update: async (id, data) => ({ id, ...data }),
-      delete: async (id) => ({ id })
-    },
-    Booking: {
-      list: async () => [],
-      filter: async () => [],
-      create: async (data) => ({ id: Math.random(), ...data }),
-      update: async (id, data) => ({ id, ...data }),
-      delete: async (id) => ({ id })
-    },
-    CalendarEvent: {
-      list: async () => [],
-      filter: async () => [],
-      create: async (data) => ({ id: Math.random(), ...data }),
-      update: async (id, data) => ({ id, ...data }),
-      delete: async (id) => ({ id })
-    },
-    Message: {
-      list: async () => [],
-      filter: async () => [],
-      create: async (data) => ({ id: Math.random(), ...data }),
-      update: async (id, data) => ({ id, ...data }),
-      delete: async (id) => ({ id })
-    },
-    Notification: {
-      list: async () => [],
-      filter: async () => [],
-      create: async (data) => ({ id: Math.random(), ...data }),
-      update: async (id, data) => ({ id, ...data }),
-      delete: async (id) => ({ id })
-    },
-    User: {
-      list: async () => [],
-      filter: async () => [],
-      create: async (data) => ({ id: Math.random(), ...data }),
-      update: async (id, data) => ({ id, ...data }),
-      delete: async (id) => ({ id })
-    }
+    Project: createPersistence('broski_projects'),
+    Booking: createPersistence('broski_bookings'),
+    CalendarEvent: createPersistence('broski_calendar_events'),
+    Message: createPersistence('broski_messages'),
+    Notification: createPersistence('broski_notifications'),
+    User: createPersistence('broski_users')
   },
   chatbot: {
     sendMessage: async ({ prompt }) => {
       try {
+        // @ts-ignore
         const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-        if (!apiKey) {
-          return "Gemini API key is missing. Please add VITE_GEMINI_API_KEY to your .env file.";
-        }
         const response = await fetch(
           `https://generativelanguage.googleapis.com/v1/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`,
           {
@@ -112,3 +174,4 @@ export const api = {
     }
   }
 };
+
