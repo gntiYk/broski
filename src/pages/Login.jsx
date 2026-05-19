@@ -48,7 +48,6 @@ export default function Login() {
     <AuthLayout
       icon={LogIn}
       title="Тавтай морил"
-      subtitle="Бүртгэлдээ нэвтэрнэ үү"
       footer={
         <>
           Бүртгэлгүй юу?{" "}
@@ -67,7 +66,7 @@ export default function Login() {
           }`}
         >
           <GraduationCap className="w-4 h-4" />
-          Би Оюутан
+          Би Сурагч
         </button>
         <button
           type="button"
@@ -77,7 +76,7 @@ export default function Login() {
           }`}
         >
           <UserSquare2 className="w-4 h-4" />
-          Би Багш
+          Би Tutor
         </button>
       </div>
 
@@ -151,7 +150,7 @@ export default function Login() {
               Нэвтэрч байна...
             </>
           ) : (
-            `Нэвтрэх (${role === 'student' ? 'Оюутан' : 'Багш'})`
+            `Нэвтрэх (${role === 'student' ? 'Сурагч' : 'Tutor'})`
           )}
         </Button>
       </form>

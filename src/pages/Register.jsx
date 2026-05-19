@@ -49,7 +49,6 @@ export default function Register() {
     <AuthLayout
       icon={UserPlus}
       title="Бүртгэл үүсгэх"
-      subtitle="Өнөөдөр shineUEcas-д нэгдээрэй"
       footer={
         <>
           Бүртгэлтэй юу?{" "}
@@ -68,7 +67,7 @@ export default function Register() {
           }`}
         >
           <GraduationCap className="w-4 h-4" />
-          Би Оюутан
+          Би Сурагч
         </button>
         <button
           type="button"
@@ -78,7 +77,7 @@ export default function Register() {
           }`}
         >
           <UserSquare2 className="w-4 h-4" />
-          Би Багш
+          Би Tutor
         </button>
       </div>
 
@@ -108,7 +107,7 @@ export default function Register() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="name">Бүтэн нэр</Label>
+          <Label htmlFor="name">Нэвтрэх Нэр</Label>
           <div className="relative">
             <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
             <Input
@@ -164,7 +163,7 @@ export default function Register() {
               Бүртгэл үүсгэж байна...
             </>
           ) : (
-            `Бүртгүүлэх (${role === 'student' ? 'Оюутан' : 'Багш'})`
+            `Бүртгүүлэх (${role === 'student' ? 'Сурагч' : 'Tutor'})`
           )}
         </Button>
       </form>

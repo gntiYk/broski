@@ -79,7 +79,7 @@ export default function Landing() {
               </Link>
               <Link to="/login">
                 <Button size="lg" variant="outline" className="px-8">
-                  Багш Захиалах
+                  Давтлага авах
                 </Button>
               </Link>
             </motion.div>
@@ -94,7 +94,7 @@ export default function Landing() {
             <Sparkles className="w-4 h-4 text-primary" />
             <span className="font-heading font-bold">shineUEcas</span>
           </div>
-          <p className="text-sm text-muted-foreground">© 2026 shineUEcas. IB сурагчдад зориулан сурагчдын бүтээв.</p>
+          <p className="text-sm text-muted-foreground">© 2026 shineUEcas. Шинэ Үе сургуулийн сурагчид бүтээв.</p>
           <div className="flex gap-4 text-sm text-muted-foreground">
             <span className="hover:text-foreground cursor-pointer transition-colors">Нууцлал</span>
             <span className="hover:text-foreground cursor-pointer transition-colors">Үйлчилгээний нөхцөл</span>
