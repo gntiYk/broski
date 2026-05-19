@@ -13,12 +13,12 @@ const fadeUp = {
 };
 
 const features = [
-  { icon: FolderKanban, title: 'CAS Project Tracking', desc: 'Log hours, track progress across Creativity, Activity, and Service categories' },
-  { icon: BookOpen, title: 'Tutor Booking', desc: 'Schedule sessions with available tutors and get academic help when you need it' },
-  { icon: CalendarDays, title: 'Smart Calendar', desc: 'Plan study blocks, CAS work, deadlines, and tutoring sessions in one place' },
-  { icon: Bot, title: 'AI Assistant', desc: 'Get personalized CAS advice, project ideas, and study planning from AI' },
-  { icon: Users, title: 'Student-Tutor Chat', desc: 'Communicate directly with tutors for guidance and session coordination' },
-  { icon: TrendingUp, title: 'Analytics Dashboard', desc: 'Visualize your progress with beautiful charts and achievement tracking' },
+  { icon: FolderKanban, title: 'CAS Төсөл Хөтлөлт', desc: 'Бүтээлч, Идэвхтэй, Нийгмийн тустай ажлын цагаа бүртгэж, явцаа хянах' },
+  { icon: BookOpen, title: 'Багш Захиалга', desc: 'Хүссэн цагтаа багш нартай хичээлийн цаг товлож, сурлагадаа тусламж авах' },
+  { icon: CalendarDays, title: 'Ухаалаг Хуанли', desc: 'Хичээл давтах цаг, CAS ажил, даалгавар өгөх эцсийн хугацаа болон багштай уулзах цагаа нэг дороос төлөвлөх' },
+  { icon: Bot, title: 'AI Туслах', desc: 'Хувийн CAS зөвлөгөө, төслийн санаа, сургалтын төлөвлөлтийг хиймэл оюунаас авах' },
+  { icon: Users, title: 'Сурагч-Багшийн Чат', desc: 'Удирдамж, зөвлөгөө авахын тулд багш нартай шууд холбогдож цагаа зохицуулах' },
+  { icon: TrendingUp, title: 'Статистик Хянах Самбар', desc: 'Сурлагын явц, ололт амжилтаа үзүүлэн зураг, графикуудын тусламжтай харах' },
 ];
 
 const stats = [
@@ -47,8 +47,8 @@ export default function Landing() {
             <span className="font-heading font-bold text-lg">shine<span className="text-primary">UE</span>cas</span>
           </div>
           <div className="flex items-center gap-3">
-            <Link to="/login"><Button variant="ghost" size="sm">Log in</Button></Link>
-            <Link to="/register"><Button size="sm">Get Started</Button></Link>
+            <Link to="/login"><Button variant="ghost" size="sm">Нэвтрэх</Button></Link>
+            <Link to="/register"><Button size="sm">Эхлэх</Button></Link>
           </div>
         </div>
       </nav>
@@ -67,19 +67,19 @@ export default function Landing() {
           >
 
             <motion.h1 variants={fadeUp} custom={1} className="text-4xl sm:text-5xl lg:text-6xl font-heading font-extrabold leading-tight tracking-tight">
-              Manage your CAS journey{' '}
-              <span className="gradient-text">smarter</span>
+              CAS аяллаа{' '}
+              <span className="gradient-text">ухаалгаар төлөвлөөрэй</span>
             </motion.h1>
 
             <motion.div variants={fadeUp} custom={3} className="flex flex-wrap justify-center gap-3">
               <Link to="/register">
                 <Button size="lg" className="px-8 gap-2">
-                  Get Started <ArrowRight className="w-4 h-4" />
+                  Эхлэх <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
               <Link to="/login">
                 <Button size="lg" variant="outline" className="px-8">
-                  Book a Tutor
+                  Багш Захиалах
                 </Button>
               </Link>
             </motion.div>
@@ -98,8 +98,8 @@ export default function Landing() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl font-heading font-bold">Everything you need for CAS success</h2>
-            <p className="text-muted-foreground mt-2 max-w-xl mx-auto">Powerful tools designed specifically for IB students, tutors, and coordinators</p>
+            <h2 className="text-3xl font-heading font-bold">CAS-ийг амжилттай хэрэгжүүлэхэд хэрэгтэй бүх зүйл</h2>
+            <p className="text-muted-foreground mt-2 max-w-xl mx-auto">IB хөтөлбөрийн сурагчид, багш нар болон зохицуулагч нарт зориулсан хүчирхэг хэрэгслүүд</p>
           </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((f, i) => (
@@ -134,11 +134,11 @@ export default function Landing() {
             <Sparkles className="w-4 h-4 text-primary" />
             <span className="font-heading font-bold">shineUEcas</span>
           </div>
-          <p className="text-sm text-muted-foreground">© 2026 shineUEcas. Built for IB students, by students.</p>
+          <p className="text-sm text-muted-foreground">© 2026 shineUEcas. IB сурагчдад зориулан сурагчдын бүтээв.</p>
           <div className="flex gap-4 text-sm text-muted-foreground">
-            <span className="hover:text-foreground cursor-pointer transition-colors">Privacy</span>
-            <span className="hover:text-foreground cursor-pointer transition-colors">Terms</span>
-            <span className="hover:text-foreground cursor-pointer transition-colors">Contact</span>
+            <span className="hover:text-foreground cursor-pointer transition-colors">Нууцлал</span>
+            <span className="hover:text-foreground cursor-pointer transition-colors">Үйлчилгээний нөхцөл</span>
+            <span className="hover:text-foreground cursor-pointer transition-colors">Холбоо барих</span>
           </div>
         </div>
       </footer>
