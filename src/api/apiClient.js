@@ -1,0 +1,89 @@
+// Generic API Client Wrapper
+// Replace these with actual fetch/axios calls to your new backend (Firebase, Supabase, Node, etc.)
+
+export const api = {
+  auth: {
+    loginViaEmailPassword: async (email, password, role = 'student') => {
+      console.log('Mock login:', email, 'Role:', role);
+      const user = { id: Math.random().toString(), email, role };
+      localStorage.setItem('mock_user', JSON.stringify(user));
+      return { user };
+    },
+    register: async (email, password, name, role) => {
+      console.log('Mock register:', email, role);
+      const user = { id: Math.random().toString(), email, full_name: name, role };
+      localStorage.setItem('mock_user', JSON.stringify(user));
+      return { user };
+    },
+    me: async () => {
+      const stored = localStorage.getItem('mock_user');
+      if (stored) return JSON.parse(stored);
+      return null;
+    },
+    logout: async () => {
+      console.log('Mock logout');
+      localStorage.removeItem('mock_user');
+    },
+    resetPasswordRequest: async (email) => {
+      console.log('Mock reset password:', email);
+    },
+    loginWithProvider: (provider, redirectUrl) => {
+      console.log('Mock login with provider:', provider);
+      const user = { id: '1', email: 'google@example.com', role: 'student' };
+      localStorage.setItem('mock_user', JSON.stringify(user));
+      window.location.href = redirectUrl || '/student';
+    },
+    redirectToLogin: (redirectUrl) => {
+      window.location.href = '/login';
+    }
+  },
+  entities: {
+    Project: {
+      list: async () => [],
+      filter: async () => [],
+      create: async (data) => ({ id: Math.random(), ...data }),
+      update: async (id, data) => ({ id, ...data }),
+      delete: async (id) => ({ id })
+    },
+    Booking: {
+      list: async () => [],
+      filter: async () => [],
+      create: async (data) => ({ id: Math.random(), ...data }),
+      update: async (id, data) => ({ id, ...data }),
+      delete: async (id) => ({ id })
+    },
+    CalendarEvent: {
+      list: async () => [],
+      filter: async () => [],
+      create: async (data) => ({ id: Math.random(), ...data }),
+      update: async (id, data) => ({ id, ...data }),
+      delete: async (id) => ({ id })
+    },
+    Message: {
+      list: async () => [],
+      filter: async () => [],
+      create: async (data) => ({ id: Math.random(), ...data }),
+      update: async (id, data) => ({ id, ...data }),
+      delete: async (id) => ({ id })
+    },
+    Notification: {
+      list: async () => [],
+      filter: async () => [],
+      create: async (data) => ({ id: Math.random(), ...data }),
+      update: async (id, data) => ({ id, ...data }),
+      delete: async (id) => ({ id })
+    },
+    User: {
+      list: async () => [],
+      filter: async () => [],
+      create: async (data) => ({ id: Math.random(), ...data }),
+      update: async (id, data) => ({ id, ...data }),
+      delete: async (id) => ({ id })
+    }
+  },
+  chatbot: {
+    sendMessage: async ({ prompt }) => {
+      return { response: "This is a mock response because the backend is not connected yet." };
+    }
+  }
+};
