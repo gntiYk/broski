@@ -83,7 +83,32 @@ export const api = {
   },
   chatbot: {
     sendMessage: async ({ prompt }) => {
-      return { response: "This is a mock response because the backend is not connected yet." };
+      try {
+        const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+        if (!apiKey) {
+          return "Gemini API key is missing. Please add VITE_GEMINI_API_KEY to your .env file.";
+        }
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+            }),
+          }
+        );
+        const data = await response.json();
+        if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0]) {
+          return data.candidates[0].content.parts[0].text;
+        }
+        return data.error?.message || "Sorry, I couldn't generate a response. Please try again.";
+      } catch (error) {
+        console.error("Gemini API error:", error);
+        return "Failed to connect to the AI Assistant. Please check your network and try again.";
+      }
     }
   }
 };
