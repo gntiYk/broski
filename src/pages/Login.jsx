@@ -47,13 +47,13 @@ export default function Login() {
   return (
     <AuthLayout
       icon={LogIn}
-      title="Welcome back"
-      subtitle="Log in to your account"
+      title="Тавтай морил"
+      subtitle="Бүртгэлдээ нэвтэрнэ үү"
       footer={
         <>
-          Don't have an account?{" "}
+          Бүртгэлгүй юу?{" "}
           <Link to="/register" className="text-primary font-medium hover:underline">
-            Create one
+            Шинээр бүртгүүлэх
           </Link>
         </>
       }
@@ -67,7 +67,7 @@ export default function Login() {
           }`}
         >
           <GraduationCap className="w-4 h-4" />
-          I'm a Student
+          Би Оюутан
         </button>
         <button
           type="button"
@@ -77,7 +77,7 @@ export default function Login() {
           }`}
         >
           <UserSquare2 className="w-4 h-4" />
-          I'm a Tutor
+          Би Багш
         </button>
       </div>
 
@@ -87,7 +87,7 @@ export default function Login() {
         onClick={handleGoogle}
       >
         <GoogleIcon className="w-5 h-5 mr-2" />
-        Continue with Google
+        Google-ээр нэвтрэх
       </Button>
 
       <div className="relative mb-6">
@@ -95,7 +95,7 @@ export default function Login() {
           <div className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-card px-3 text-muted-foreground">or</span>
+          <span className="bg-card px-3 text-muted-foreground">эсвэл</span>
         </div>
       </div>
 
@@ -107,7 +107,7 @@ export default function Login() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">Имэйл хаяг</Label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
             <Input
@@ -125,7 +125,7 @@ export default function Login() {
         </div>
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">Нууц үг</Label>
             <Link to="/forgot-password" className="text-xs text-primary hover:underline">
               Нууц үг мартсан
             </Link>
@@ -148,10 +148,10 @@ export default function Login() {
           {loading ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Logging in...
+              Нэвтэрч байна...
             </>
           ) : (
-            `Log in as ${role === 'student' ? 'Student' : 'Tutor'}`
+            `Нэвтрэх (${role === 'student' ? 'Оюутан' : 'Багш'})`
           )}
         </Button>
       </form>

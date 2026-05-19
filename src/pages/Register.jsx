@@ -48,13 +48,13 @@ export default function Register() {
   return (
     <AuthLayout
       icon={UserPlus}
-      title="Create an account"
-      subtitle="Join shineUEcas today"
+      title="Бүртгэл үүсгэх"
+      subtitle="Өнөөдөр shineUEcas-д нэгдээрэй"
       footer={
         <>
-          Already have an account?{" "}
+          Бүртгэлтэй юу?{" "}
           <Link to="/login" className="text-primary font-medium hover:underline">
-            Log in
+            Нэвтрэх
           </Link>
         </>
       }
@@ -68,7 +68,7 @@ export default function Register() {
           }`}
         >
           <GraduationCap className="w-4 h-4" />
-          I'm a Student
+          Би Оюутан
         </button>
         <button
           type="button"
@@ -78,7 +78,7 @@ export default function Register() {
           }`}
         >
           <UserSquare2 className="w-4 h-4" />
-          I'm a Tutor
+          Би Багш
         </button>
       </div>
 
@@ -88,7 +88,7 @@ export default function Register() {
         onClick={handleGoogle}
       >
         <GoogleIcon className="w-5 h-5 mr-2" />
-        Sign up with Google
+        Google-ээр бүртгүүлэх
       </Button>
 
       <div className="relative mb-6">
@@ -96,7 +96,7 @@ export default function Register() {
           <div className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-card px-3 text-muted-foreground">or</span>
+          <span className="bg-card px-3 text-muted-foreground">эсвэл</span>
         </div>
       </div>
 
@@ -108,7 +108,7 @@ export default function Register() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="name">Full Name</Label>
+          <Label htmlFor="name">Бүтэн нэр</Label>
           <div className="relative">
             <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
             <Input
@@ -116,7 +116,7 @@ export default function Register() {
               type="text"
               autoComplete="name"
               autoFocus
-              placeholder="John Doe"
+              placeholder="Бат Дорж"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="pl-10 h-12"
@@ -125,7 +125,7 @@ export default function Register() {
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">Имэйл хаяг</Label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
             <Input
@@ -141,7 +141,7 @@ export default function Register() {
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">Нууц үг</Label>
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" aria-hidden="true" />
             <Input
@@ -161,10 +161,10 @@ export default function Register() {
           {loading ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Creating account...
+              Бүртгэл үүсгэж байна...
             </>
           ) : (
-            `Sign up as ${role === 'student' ? 'Student' : 'Tutor'}`
+            `Бүртгүүлэх (${role === 'student' ? 'Оюутан' : 'Багш'})`
           )}
         </Button>
       </form>
