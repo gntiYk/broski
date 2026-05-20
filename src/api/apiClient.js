@@ -175,7 +175,7 @@ export const api = {
       const users = getStorageItem('broski_users');
       const registered = users.find(u => u.email === email && u.role === role);
       if (!registered || registered.password !== password) {
-        throw new Error("Нууц үг эсвэл үүрэг буруу байна.");
+        throw new Error("Буруу байна.");
       }
       
       const user = { ...registered, id: registered.id || Math.random().toString() };

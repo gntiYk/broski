@@ -94,6 +94,18 @@ const QUIZZES = {
         options: ['9cm', '10cm', '12cm', '14cm'],
         correct: 1,
         explanation: 'Apply Pythagoras\' Theorem: 6² + 8² = 36 + 64 = 100. The square root of 100 is 10cm.'
+      },
+      {
+        q: 'Solve the simultaneous equations: 2x + y = 7 and x - y = 2',
+        options: ['x=3, y=1', 'x=4, y=2', 'x=2, y=3', 'x=3, y=2'],
+        correct: 0,
+        explanation: 'Add the equations: (2x+y) + (x-y) = 7 + 2 => 3x = 9 => x=3. Substitute x=3 into x-y=2 => 3-y=2 => y=1.'
+      },
+      {
+        q: 'What is the derivative of f(x) = 3x² + 5x - 2?',
+        options: ['6x + 5', '3x + 5', '6x² + 5', '6x - 2'],
+        correct: 0,
+        explanation: 'Using the power rule: d/dx(3x²) = 6x, and d/dx(5x) = 5. The constant -2 becomes 0.'
       }
     ]
   },
@@ -119,6 +131,18 @@ const QUIZZES = {
         options: ['Speed', 'Displacement', 'Acceleration', 'Momentum'],
         correct: 2,
         explanation: 'Acceleration is defined mathematically as the change in velocity divided by time.'
+      },
+      {
+        q: 'Calculate the kinetic energy of a 2kg mass moving at 3m/s.',
+        options: ['3 J', '6 J', '9 J', '18 J'],
+        correct: 2,
+        explanation: 'KE = 1/2 * m * v². KE = 0.5 * 2 * (3²) = 1 * 9 = 9 Joules.'
+      },
+      {
+        q: 'According to Newton\'s second law, what is the force required to accelerate a 5kg mass at 2m/s²?',
+        options: ['2.5 N', '5 N', '7 N', '10 N'],
+        correct: 3,
+        explanation: 'F = m * a. Therefore, F = 5kg * 2m/s² = 10 Newtons.'
       }
     ]
   },
@@ -149,6 +173,28 @@ const QUIZZES = {
         options: ['Lazy', 'Clever', 'Hard-working', 'Fast'],
         correct: 2,
         explanation: '"Diligent" means showing careful, thorough, and active effort (hard-working).'
+      },
+      {
+        q: 'Change into passive voice: "The chef cooked a delicious meal."',
+        options: [
+          'A delicious meal was cooked by the chef.',
+          'A delicious meal is cooked by the chef.',
+          'The chef was cooking a delicious meal.',
+          'A delicious meal has been cooked by the chef.'
+        ],
+        correct: 0,
+        explanation: 'In simple past tense, the passive voice is formed using "was/were + past participle".'
+      },
+      {
+        q: 'Which conditional sentence is correct?',
+        options: [
+          'If it will rain, I will stay home.',
+          'If it rains, I would stay home.',
+          'If it rained, I will stay home.',
+          'If it rains, I will stay home.'
+        ],
+        correct: 3,
+        explanation: 'The First Conditional uses "If + Present Simple, will + base verb".'
       }
     ]
   },
@@ -174,6 +220,18 @@ const QUIZZES = {
         options: ['Artery', 'Vein', 'Capillary', 'Venule'],
         correct: 0,
         explanation: 'Arteries carry oxygenated blood away from the heart (except the pulmonary artery).'
+      },
+      {
+        q: 'What is the function of amylase in the human digestive system?',
+        options: ['To break down proteins', 'To break down fats', 'To break down starch', 'To absorb water'],
+        correct: 2,
+        explanation: 'Amylase is an enzyme found in saliva and the pancreas that catalyzes the breakdown of starch into sugars.'
+      },
+      {
+        q: 'In genetics, what term describes having two identical alleles for a particular gene?',
+        options: ['Heterozygous', 'Homozygous', 'Dominant', 'Recessive'],
+        correct: 1,
+        explanation: 'Homozygous means an organism has two identical copies (alleles) of a specific gene.'
       }
     ]
   },
@@ -412,7 +470,7 @@ export default function StudentDashboard() {
                     <div>
                       <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{quiz.subjectName}</span>
                       <h4 className="font-heading font-semibold text-sm mt-2">{quiz.subjectName}</h4>
-                      <p className="text-[10px] text-muted-foreground mt-1">3 Multiple choice questions</p>
+                      <p className="text-[10px] text-muted-foreground mt-1">{quiz.questions.length} Multiple choice questions</p>
                     </div>
 
                     <button
