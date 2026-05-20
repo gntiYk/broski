@@ -16,6 +16,7 @@ const setStorageItem = (key, val) => {
   }
 };
 
+<<<<<<< HEAD
 // Helper function to create notifications
 const createNotification = (tutor_email, message, type = 'booking', data = {}) => {
   const notifications = getStorageItem('broski_notifications', []);
@@ -33,6 +34,8 @@ const createNotification = (tutor_email, message, type = 'booking', data = {}) =
   return notification;
 };
 
+=======
+>>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
 const createPersistence = (storageKey) => {
   return {
     list: async () => {
@@ -55,6 +58,7 @@ const createPersistence = (storageKey) => {
       const newItem = { id: Math.random().toString(), created_date: new Date().toISOString(), ...data };
       items.push(newItem);
       setStorageItem(storageKey, items);
+<<<<<<< HEAD
       
       // Create notification for tutor when a booking is created
       if (storageKey === 'broski_bookings' && data.tutor_email) {
@@ -66,6 +70,8 @@ const createPersistence = (storageKey) => {
         );
       }
       
+=======
+>>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
       return newItem;
     },
     update: async (id, data) => {
@@ -74,6 +80,7 @@ const createPersistence = (storageKey) => {
       if (idx !== -1) {
         items[idx] = { ...items[idx], ...data };
         setStorageItem(storageKey, items);
+<<<<<<< HEAD
         
         // Create notification when booking status changes
         if (storageKey === 'broski_bookings' && data.status) {
@@ -94,6 +101,8 @@ const createPersistence = (storageKey) => {
           }
         }
         
+=======
+>>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
         return items[idx];
       }
       return { id, ...data };
@@ -110,23 +119,37 @@ const createPersistence = (storageKey) => {
 // Initialize beautiful demo data if empty
 if (!localStorage.getItem('broski_projects')) {
   localStorage.setItem('broski_projects', JSON.stringify([
+<<<<<<< HEAD
     { id: 'p1', student_email: 'student@example.com', title: 'Шинэ Үе ногоон төгөл', description: 'Сургуулийнхаа цэцэрлэгт мод тарьж нийгмийн тустай үйлс хийх төсөл.', category: 'service', status: 'in_progress', hours_logged: 15, target_hours: 50, start_date: '2026-05-01', end_date: '2026-06-30', reflections: 'Төсөл маань амжилттай үргэлжилж байгаа. Мод тарихаас гадна зүлэгжүүлэлт хийж байна.' },
     { id: 'p2', student_email: 'student@example.com', title: 'Вэбсайт хөгжүүлэлт', description: 'Сургуулийн мэдээллийн вэбсайт бэлтгэж, мэдээ мэдээллийг нийтлэх.', category: 'creativity', status: 'completed', hours_logged: 40, target_hours: 40, start_date: '2026-04-10', end_date: '2026-05-15', reflections: 'Маш сонирхолтой бүтээлч ажил байлаа.' },
     { id: 'p3', student_email: 'student@example.com', title: 'Сагсан бөмбөгийн тэмцээн', description: 'Сургуулийн анги хоорондын тэмцээнд оролцож спортоор хичээллэх.', category: 'activity', status: 'in_progress', hours_logged: 12, target_hours: 30, start_date: '2026-05-10', end_date: '2026-05-25', reflections: 'Идэвхтэй дасгал хөдөлгөөн хийж байна.' },
     { id: 'p4', student_email: 'student@example.com', title: 'Сургалтын аппликейшн бүтээх', description: 'Хүүхдүүдэд тоо бодож сурахад нь зориулсан интерактив тоглоом хөгжүүлэх.', category: 'creativity', status: 'in_progress', hours_logged: 30, target_hours: 50, start_date: '2026-05-01', end_date: '2026-06-15', reflections: 'Код бичих явцдаа их зүйл суралцаж байна.' },
     { id: 'p5', student_email: 'student@example.com', title: 'Асрамжийн газарт туслах', description: 'Асрамжийн газрын хүүхдүүдэд ном уншиж өгөх болон Англи хэл заах.', category: 'service', status: 'completed', hours_logged: 50, target_hours: 50, start_date: '2026-03-01', end_date: '2026-04-30', reflections: 'Хүүхдүүдэд туслах маш сайхан мэдрэмж байсан.' }
+=======
+    { id: 'p1', student_email: 'tutor@example.com', title: 'Шинэ Үе ногоон төгөл', description: 'Сургуулийнхаа цэцэрлэгт мод тарьж нийгмийн тустай үйлс хийх төсөл.', category: 'service', status: 'in_progress', hours_logged: 15, target_hours: 50, start_date: '2026-05-01', end_date: '2026-06-30', reflections: 'Төсөл маань амжилттай үргэлжилж байгаа. Мод тарихаас гадна зүлэгжүүлэлт хийж байна.' },
+    { id: 'p2', student_email: 'tutor@example.com', title: 'Вэбсайт хөгжүүлэлт', description: 'Сургуулийн мэдээллийн вэбсайт бэлтгэж, мэдээ мэдээллийг нийтлэх.', category: 'creativity', status: 'completed', hours_logged: 40, target_hours: 40, start_date: '2026-04-10', end_date: '2026-05-15', reflections: 'Маш сонирхолтой бүтээлч ажил байлаа.' },
+    { id: 'p3', student_email: 'tutor@example.com', title: 'Сагсан бөмбөгийн тэмцээн', description: 'Сургуулийн анги хоорондын тэмцээнд оролцож спортоор хичээллэх.', category: 'activity', status: 'in_progress', hours_logged: 12, target_hours: 30, start_date: '2026-05-10', end_date: '2026-05-25', reflections: 'Идэвхтэй дасгал хөдөлгөөн хийж байна.' },
+    { id: 'p4', student_email: 'tutor@example.com', title: 'Сургалтын аппликейшн бүтээх', description: 'Хүүхдүүдэд тоо бодож сурахад нь зориулсан интерактив тоглоом хөгжүүлэх.', category: 'creativity', status: 'in_progress', hours_logged: 30, target_hours: 50, start_date: '2026-05-01', end_date: '2026-06-15', reflections: 'Код бичих явцдаа их зүйл суралцаж байна.' },
+    { id: 'p5', student_email: 'tutor@example.com', title: 'Асрамжийн газарт туслах', description: 'Асрамжийн газрын хүүхдүүдэд ном уншиж өгөх болон Англи хэл заах.', category: 'service', status: 'completed', hours_logged: 50, target_hours: 50, start_date: '2026-03-01', end_date: '2026-04-30', reflections: 'Хүүхдүүдэд туслах маш сайхан мэдрэмж байсан.' }
+>>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
   ]));
 }
 
 if (!localStorage.getItem('broski_bookings')) {
   localStorage.setItem('broski_bookings', JSON.stringify([
+<<<<<<< HEAD
     { id: 'b1', student_email: 'student@example.com', student_name: 'Сурагч Дорж', tutor_email: 'tutor@example.com', subject: 'Математикийн давтлага', status: 'pending', date: '2026-05-20', time_slot: '14:00 - 15:00', notes: 'Тэгшитгэл бодох болон интегралын тухай давтах хүсэлтэй байна.', created_date: new Date().toISOString() },
     { id: 'b2', student_email: 'student2@example.com', student_name: 'Сурагч Сарнай', tutor_email: 'tutor@example.com', subject: 'Физикийн хичээл', status: 'approved', date: '2026-05-21', time_slot: '16:00 - 17:00', notes: 'Ньютоны хуулиудын дадлага даалгавар бодно.', created_date: new Date().toISOString() }
+=======
+    { id: 'b1', student_email: 'student@example.com', student_name: 'Сурагч Дорж', tutor_email: 'tutor@example.com', subject: 'Математикийн давтлага', status: 'pending', date: '2026-05-20', time_slot: '14:00 - 15:00', notes: 'Тэгшитгэл бодох болон интегралын тухай давтах хүсэлтэй байна.' },
+    { id: 'b2', student_email: 'student2@example.com', student_name: 'Сурагч Сарнай', tutor_email: 'tutor@example.com', subject: 'Физикийн хичээл', status: 'approved', date: '2026-05-21', time_slot: '16:00 - 17:00', notes: 'Ньютоны хуулиудын дадлага даалгавар бодно.' }
+>>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
   ]));
 }
 
 if (!localStorage.getItem('broski_users')) {
   localStorage.setItem('broski_users', JSON.stringify([
+<<<<<<< HEAD
     { email: 'student@example.com', full_name: 'Сурагч Дорж', role: 'student', password: 'student123' },
     { email: 'student2@example.com', full_name: 'Сурагч Сарнай', role: 'student', password: 'student123' },
     { email: 'tutor@example.com', full_name: 'Tutor Зориг', role: 'tutor', password: 'tutor123' }
@@ -137,6 +160,11 @@ if (!localStorage.getItem('broski_users')) {
 if (!localStorage.getItem('broski_notifications')) {
   localStorage.setItem('broski_notifications', JSON.stringify([
     { id: 'n1', tutor_email: 'tutor@example.com', message: 'Сурагч Дорж математикийн давтлагыг зааж өгөхийг хүсэлтэй байна', type: 'booking', read: false, created_date: new Date(Date.now() - 86400000).toISOString(), data: { booking_id: 'b1' } }
+=======
+    { email: 'student@example.com', full_name: 'Сурагч Дорж', role: 'student' },
+    { email: 'student2@example.com', full_name: 'Сурагч Сарнай', role: 'student' },
+    { email: 'tutor@example.com', full_name: 'Tutor Зориг', role: 'tutor' }
+>>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
   ]));
 }
 
@@ -162,7 +190,11 @@ export const api = {
       console.log('Mock register:', email, role);
       
       const users = getStorageItem('broski_users');
+<<<<<<< HEAD
       const registered = { email, full_name: name, role, password };
+=======
+      const registered = { email, full_name: name, role };
+>>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
       users.push(registered);
       setStorageItem('broski_users', users);
       
@@ -194,6 +226,7 @@ export const api = {
   },
   entities: {
     Project: createPersistence('broski_projects'),
+<<<<<<< HEAD
     Booking: {
       ...createPersistence('broski_bookings'),
       // Override create to handle tutor assignment
@@ -216,6 +249,9 @@ export const api = {
         return newItem;
       }
     },
+=======
+    Booking: createPersistence('broski_bookings'),
+>>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
     CalendarEvent: createPersistence('broski_calendar_events'),
     Message: createPersistence('broski_messages'),
     Notification: createPersistence('broski_notifications'),

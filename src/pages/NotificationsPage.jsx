@@ -6,6 +6,7 @@ import { useAuth } from '@/lib/AuthContext';
 import SectionHeader from '@/components/shared/SectionHeader';
 import { Button } from '@/components/ui/button';
 import {
+<<<<<<< HEAD
   CheckCircle2, XCircle, Clock, AlertTriangle, MessageCircle, Bell, CheckCheck, Check, X
 } from 'lucide-react';
 import { format } from 'date-fns';
@@ -16,6 +17,15 @@ const typeIcons = {
   booking_approved: { icon: CheckCircle2, color: 'text-emerald-500 bg-emerald-500/10' },
   booking_rejected: { icon: XCircle, color: 'text-destructive bg-destructive/10' },
   booking_status: { icon: CheckCircle2, color: 'text-emerald-500 bg-emerald-500/10' },
+=======
+  CheckCircle2, XCircle, Clock, AlertTriangle, MessageCircle, Bell, CheckCheck
+} from 'lucide-react';
+import { format } from 'date-fns';
+
+const typeIcons = {
+  booking_approved: { icon: CheckCircle2, color: 'text-emerald-500 bg-emerald-500/10' },
+  booking_rejected: { icon: XCircle, color: 'text-destructive bg-destructive/10' },
+>>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
   reminder: { icon: Clock, color: 'text-amber-500 bg-amber-500/10' },
   deadline: { icon: AlertTriangle, color: 'text-orange-500 bg-orange-500/10' },
   message: { icon: MessageCircle, color: 'text-primary bg-primary/10' },
@@ -27,6 +37,7 @@ export default function NotificationsPage() {
   const queryClient = useQueryClient();
 
   const { data: notifications = [] } = useQuery({
+<<<<<<< HEAD
     queryKey: ['notifications', user?.email],
     queryFn: async () => {
       const allNotifications = await api.entities.Notification.list();
@@ -39,6 +50,10 @@ export default function NotificationsPage() {
   const { data: bookings = [] } = useQuery({
     queryKey: ['bookings', user?.email],
     queryFn: () => api.entities.Booking.list(),
+=======
+    queryKey: ['notifications'],
+    queryFn: () => api.entities.Notification.filter({ user_email: user?.email }, '-created_date', 50),
+>>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
     enabled: !!user?.email,
   });
 
@@ -55,6 +70,7 @@ export default function NotificationsPage() {
     queryClient.invalidateQueries({ queryKey: ['notifications'] });
   };
 
+<<<<<<< HEAD
   const approveBooking = useMutation({
     mutationFn: (bookingId) => api.entities.Booking.update(bookingId, { status: 'approved' }),
     onSuccess: () => {
@@ -73,6 +89,8 @@ export default function NotificationsPage() {
     },
   });
 
+=======
+>>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
@@ -93,11 +111,14 @@ export default function NotificationsPage() {
         {notifications.map((notif, i) => {
           const config = typeIcons[notif.type] || typeIcons.system;
           const Icon = config.icon;
+<<<<<<< HEAD
           
           // Find related booking for action buttons
           const booking = notif.data?.booking_id ? bookings.find(b => b.id === notif.data.booking_id) : null;
           const showActions = notif.type === 'booking' && booking && booking.status === 'pending' && user?.role === 'tutor';
 
+=======
+>>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
           return (
             <motion.div
               key={notif.id}
@@ -114,6 +135,7 @@ export default function NotificationsPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
+<<<<<<< HEAD
                   <p className={`text-sm ${notif.read ? '' : 'font-medium'}`}>{notif.message}</p>
                   {!notif.read && <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0" />}
                 </div>
@@ -153,6 +175,15 @@ export default function NotificationsPage() {
                     </Button>
                   </div>
                 )}
+=======
+                  <p className={`text-sm ${notif.read ? '' : 'font-medium'}`}>{notif.title}</p>
+                  {!notif.read && <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0" />}
+                </div>
+                <p className="text-xs text-muted-foreground mt-0.5">{notif.message}</p>
+                <p className="text-[10px] text-muted-foreground mt-1">
+                  {notif.created_date ? format(new Date(notif.created_date), 'MMM d, h:mm a') : ''}
+                </p>
+>>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
               </div>
             </motion.div>
           );

@@ -54,7 +54,11 @@ const AuthenticatedApp = () => {
 const RoleBasedHome = () => {
   const { user } = useAuth();
   if (user?.role === 'tutor') return <Navigate to="/tutor" replace />;
+<<<<<<< HEAD
   if (user?.role === 'student') return <Navigate to="/student" replace />;
+=======
+  if (user?.role === 'student') return <Navigate to="/booking" replace />;
+>>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
   return <Navigate to="/welcome" replace />;
 };
 
@@ -73,6 +77,7 @@ const RoleBasedHome = () => {
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/welcome" replace />} />}>
         <Route element={<AppLayout />}>
           <Route path="/" element={<RoleBasedHome />} />
+<<<<<<< HEAD
           
           {/* Student Routes */}
           <Route path="/student" element={<StudentDashboard />} />
@@ -89,6 +94,10 @@ const RoleBasedHome = () => {
           <Route path="/tutor/settings" element={<SettingsPage />} />
           
           {/* Legacy routes for backward compatibility */}
+=======
+          <Route path="/student" element={<StudentDashboard />} />
+          <Route path="/tutor" element={<TutorDashboard />} />
+>>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
           <Route path="/projects" element={<ProjectTrack />} />
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/booking" element={<BookingPage />} />

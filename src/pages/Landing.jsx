@@ -87,6 +87,7 @@ export default function Landing() {
         </div>
       </section>
 
+<<<<<<< HEAD
       {/* Demo Credentials Section */}
       <section className="relative py-20 px-4 sm:px-6 bg-muted/30 border-t border-b border-border">
         <div className="max-w-4xl mx-auto">
@@ -170,6 +171,8 @@ export default function Landing() {
         </div>
       </section>
 
+=======
+>>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
       {/* Footer */}
       <footer className="border-t border-border py-10 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
