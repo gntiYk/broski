@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/api/apiClient';
 import { useAuth } from '@/lib/AuthContext';
@@ -8,31 +8,29 @@ import StatCard from '@/components/shared/StatCard';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Users, Clock, CheckCircle2, XCircle, Calendar, TrendingUp,
-  Palette, Activity, Heart, Sparkles
+  Palette, Activity, Heart, Sparkles, Plus, PlusCircle, Check, X
 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const CAS_TARGET = 150;
 const CATEGORY_TARGET = 50;
 
-const categoryConfig = {
-  creativity: { icon: Palette, color: 'bg-purple-500', bar: 'bg-purple-500', label: 'Creativity', text: 'text-purple-600', light: 'bg-purple-500/10' },
-  activity:   { icon: Activity, color: 'bg-emerald-500', bar: 'bg-emerald-500', label: 'Activity',   text: 'text-emerald-600', light: 'bg-emerald-500/10' },
-  service:    { icon: Heart,    color: 'bg-amber-500',  bar: 'bg-amber-500',  label: 'Service',    text: 'text-amber-600',  light: 'bg-amber-500/10' },
-};
-
 export default function TutorDashboard() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
+  // Booking states
   const { data: bookings = [] } = useQuery({
     queryKey: ['tutor-bookings'],
     queryFn: () => api.entities.Booking.filter({ tutor_email: user?.email }, '-created_date', 50),
     enabled: !!user?.email,
   });
 
+  // Projects states
   const { data: projects = [] } = useQuery({
     queryKey: ['projects', user?.email],
     queryFn: () => api.entities.Project.filter({ student_email: user?.email }, '-created_date', 200),
@@ -43,7 +41,7 @@ export default function TutorDashboard() {
     mutationFn: ({ id, data }) => api.entities.Booking.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tutor-bookings'] });
-      toast.success('Booking updated');
+      toast.success('Booking status updated');
     },
   });
 
@@ -55,9 +53,58 @@ export default function TutorDashboard() {
     updateBooking.mutate({ id, data: { status } });
   };
 
+  // --- Manual CAS Logging State ---
+  const [isLogModalOpen, setIsLogModalOpen] = useState(false);
+  const [logForm, setLogForm] = useState({
+    title: '',
+    category: 'creativity',
+    hours_logged: 3,
+    reflections: '',
+    start_date: new Date().toISOString().split('T')[0]
+  });
+
+  const handleManualLogSubmit = async (e) => {
+    e.preventDefault();
+    if (!logForm.title.trim()) {
+      toast.error('Please enter what activity you did.');
+      return;
+    }
+    if (logForm.hours_logged <= 0) {
+      toast.error('Please enter a positive number of hours.');
+      return;
+    }
+
+    try {
+      await api.entities.Project.create({
+        ...logForm,
+        student_email: user?.email,
+        status: 'completed',
+        target_hours: logForm.hours_logged,
+        description: `Manually logged CAS activity: ${logForm.title}`
+      });
+      
+      // Invalidate queries to refresh statistical calculations
+      queryClient.invalidateQueries({ queryKey: ['projects', user?.email] });
+      toast.success(`Logged ${logForm.hours_logged} hours of ${logForm.title} successfully!`);
+      
+      // Reset form
+      setLogForm({
+        title: '',
+        category: 'creativity',
+        hours_logged: 3,
+        reflections: '',
+        start_date: new Date().toISOString().split('T')[0]
+      });
+      setIsLogModalOpen(false);
+    } catch (err) {
+      toast.error('Failed to log manual CAS hours.');
+    }
+  };
+
   // Compute CAS hours
   const creativityHours = projects.filter(p => p.category === 'creativity').reduce((s, p) => s + (p.hours_logged || 0), 0);
   const activityHours   = projects.filter(p => p.category === 'activity').reduce((s, p) => s + (p.hours_logged || 0), 0);
+  
   // Service hours = logged projects service hours + completed tutoring sessions (1.5 hours each)
   const serviceProjectHours = projects.filter(p => p.category === 'service').reduce((s, p) => s + (p.hours_logged || 0), 0);
   const tutoringServiceHours = completedBookings.length * 1.5;
@@ -67,8 +114,16 @@ export default function TutorDashboard() {
   const overallPct = Math.min((totalHours / CAS_TARGET) * 100, 100);
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      <SectionHeader title="Tutor Hub" subtitle="Manage your tutoring sessions and track your CAS hours" />
+    <div className="space-y-6 max-w-7xl mx-auto pb-12">
+      <SectionHeader 
+        title="Tutor Hub" 
+        subtitle="Manage your tutoring sessions and track your CAS hours"
+        action={
+          <Button onClick={() => setIsLogModalOpen(true)} className="bg-primary hover:bg-primary-hover flex items-center gap-1.5 shadow-sm text-xs font-semibold">
+            <Plus className="w-4 h-4" /> Log CAS Hours Manually
+          </Button>
+        }
+      />
 
       {/* CAS Progress Banner */}
       <motion.div
@@ -79,7 +134,7 @@ export default function TutorDashboard() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
           <div>
             <h3 className="font-heading font-semibold text-base flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-primary" />
+              <Sparkles className="w-5 h-5 text-primary animate-pulse" />
               Миний CAS Амжилт
             </h3>
             <p className="text-xs text-muted-foreground mt-0.5">Зорилго: {CAS_TARGET} цаг биелүүлэх (тус бүр 50 цаг)</p>
@@ -93,7 +148,7 @@ export default function TutorDashboard() {
 
         {/* Per-category bars */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="rounded-lg p-4 bg-purple-500/10">
+          <div className="rounded-lg p-4 bg-purple-500/10 border border-purple-500/10">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-6 h-6 rounded-md bg-purple-500 flex items-center justify-center">
                 <Palette className="w-3.5 h-3.5 text-white" />
@@ -105,7 +160,7 @@ export default function TutorDashboard() {
             <p className="text-[10px] text-muted-foreground mt-1">{Math.min((creativityHours / CATEGORY_TARGET) * 100, 100).toFixed(0)}% биелсэн</p>
           </div>
 
-          <div className="rounded-lg p-4 bg-emerald-500/10">
+          <div className="rounded-lg p-4 bg-emerald-500/10 border border-emerald-500/10">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-6 h-6 rounded-md bg-emerald-500 flex items-center justify-center">
                 <Activity className="w-3.5 h-3.5 text-white" />
@@ -117,7 +172,7 @@ export default function TutorDashboard() {
             <p className="text-[10px] text-muted-foreground mt-1">{Math.min((activityHours / CATEGORY_TARGET) * 100, 100).toFixed(0)}% биелсэн</p>
           </div>
 
-          <div className="rounded-lg p-4 bg-amber-500/10">
+          <div className="rounded-lg p-4 bg-amber-500/10 border border-amber-500/10">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-6 h-6 rounded-md bg-amber-500 flex items-center justify-center">
                 <Heart className="w-3.5 h-3.5 text-white" />
@@ -129,7 +184,7 @@ export default function TutorDashboard() {
             <div className="flex justify-between items-center mt-1">
               <p className="text-[10px] text-muted-foreground">{Math.min((serviceHours / CATEGORY_TARGET) * 100, 100).toFixed(0)}% биелсэн</p>
               {tutoringServiceHours > 0 && (
-                <p className="text-[9px] text-amber-700 font-medium">({tutoringServiceHours.toFixed(1)}ц зааснаас)</p>
+                <p className="text-[9px] text-amber-700 font-medium font-sans">({tutoringServiceHours.toFixed(1)}ц зааснаас)</p>
               )}
             </div>
           </div>
@@ -241,6 +296,109 @@ export default function TutorDashboard() {
           )}
         </motion.div>
       </div>
+
+      {/* MANUAL CAS LOGGER OVERLAY MODAL */}
+      <AnimatePresence>
+        {isLogModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsLogModalOpen(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-md"
+            />
+
+            <motion.div
+              initial={{ scale: 0.95, y: 15, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, y: 15, opacity: 0 }}
+              className="relative bg-card border border-border w-full max-w-md rounded-2xl p-6 shadow-2xl overflow-hidden"
+            >
+              <div className="absolute left-0 top-0 right-0 h-1.5 bg-gradient-to-r from-primary to-accent" />
+              
+              <div className="flex justify-between items-center mb-4 mt-2">
+                <h3 className="font-heading font-semibold text-lg flex items-center gap-2">
+                  <PlusCircle className="w-5 h-5 text-primary" /> Log CAS Hours Manually
+                </h3>
+                <button onClick={() => setIsLogModalOpen(false)} className="text-muted-foreground hover:text-foreground">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <form onSubmit={handleManualLogSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-muted-foreground mb-1">What did you do? *</label>
+                  <Input
+                    placeholder="e.g. Drawing and Painting / Soccer Practice"
+                    value={logForm.title}
+                    onChange={e => setLogForm({ ...logForm, title: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1">Category</label>
+                    <select
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      value={logForm.category}
+                      onChange={e => setLogForm({ ...logForm, category: e.target.value })}
+                    >
+                      <option value="creativity">Creativity</option>
+                      <option value="activity">Activity</option>
+                      <option value="service">Service</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1">Hours Spent</label>
+                    <Input
+                      type="number"
+                      step="0.5"
+                      min="0.5"
+                      value={logForm.hours_logged}
+                      onChange={e => setLogForm({ ...logForm, hours_logged: parseFloat(e.target.value) || 0 })}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1">Date</label>
+                    <Input
+                      type="date"
+                      value={logForm.start_date}
+                      onChange={e => setLogForm({ ...logForm, start_date: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-muted-foreground mb-1">Reflections / Description</label>
+                  <Textarea
+                    placeholder="What did you learn? What skills did you practice?"
+                    rows={3}
+                    value={logForm.reflections}
+                    onChange={e => setLogForm({ ...logForm, reflections: e.target.value })}
+                  />
+                </div>
+
+                <div className="flex gap-2 justify-end pt-3">
+                  <Button variant="outline" type="button" onClick={() => setIsLogModalOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" className="bg-primary hover:bg-primary-hover">
+                    Log Hours
+                  </Button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

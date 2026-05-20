@@ -12,7 +12,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Progress } from '@/components/ui/progress';
 import {
   Plus, Clock, Target, Palette, Activity, Heart,
-  MoreVertical, Pencil, Trash2, PlusCircle
+  MoreVertical, Pencil, Trash2, PlusCircle, Calendar, Check,
+  ChevronDown, ChevronUp, Sparkles, AlertCircle
 } from 'lucide-react';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
@@ -43,6 +44,9 @@ export default function ProjectTrack() {
   const [filter, setFilter] = useState('all');
   const [logHoursId, setLogHoursId] = useState(null);
   const [hoursToLog, setHoursToLog] = useState('');
+  
+  // Track expanded timeline project IDs. Default expand "p_finance"
+  const [expandedTimelines, setExpandedTimelines] = useState(['p_finance']);
 
   // Fetch projects
   const { data: projects = [], isLoading } = useQuery({
@@ -56,7 +60,7 @@ export default function ProjectTrack() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects', user?.email] });
       setDialogOpen(false);
-      toast.success('Project created');
+      toast.success('Project created successfully');
     },
   });
 
@@ -66,7 +70,6 @@ export default function ProjectTrack() {
       queryClient.invalidateQueries({ queryKey: ['projects', user?.email] });
       setDialogOpen(false);
       setLogHoursId(null);
-      toast.success('Saved');
     },
   });
 
@@ -77,6 +80,55 @@ export default function ProjectTrack() {
       toast.success('Project deleted');
     },
   });
+
+  // Toggle expanded state for a project timeline
+  const toggleTimeline = (projectId) => {
+    setExpandedTimelines(prev =>
+      prev.includes(projectId)
+        ? prev.filter(id => id !== projectId)
+        : [...prev, projectId]
+    );
+  };
+
+  // Toggle milestone status and auto-calculate hours
+  const handleToggleMilestone = (project, milestoneId) => {
+    if (!project.milestones) return;
+    
+    const updatedMilestones = project.milestones.map(m => {
+      if (m.id === milestoneId) {
+        let nextStatus = 'planned';
+        if (m.status === 'planned') nextStatus = 'in_progress';
+        else if (m.status === 'in_progress') nextStatus = 'completed';
+        else if (m.status === 'completed') nextStatus = 'planned';
+        return { ...m, status: nextStatus };
+      }
+      return m;
+    });
+
+    const completedCount = updatedMilestones.filter(m => m.status === 'completed').length;
+    // Tying project milestones directly to logged hours: 10h per completed milestone
+    const newHours = completedCount * 10;
+
+    let newStatus = project.status;
+    if (completedCount === updatedMilestones.length) {
+      newStatus = 'completed';
+    } else if (completedCount > 0) {
+      newStatus = 'in_progress';
+    } else {
+      newStatus = 'planning';
+    }
+
+    updateProject.mutate({
+      id: project.id,
+      data: {
+        milestones: updatedMilestones,
+        hours_logged: newHours,
+        status: newStatus
+      }
+    });
+
+    toast.success(`Milestone updated! Hours recalculated to ${newHours}h.`);
+  };
 
   // --- computed stats ---
   const hoursBy = (cat) =>
@@ -95,6 +147,7 @@ export default function ProjectTrack() {
     if (!form.title.trim()) { toast.error('Title is required'); return; }
     if (editProject) {
       updateProject.mutate({ id: editProject.id, data: form });
+      toast.success('Project updated');
     } else {
       createProject.mutate(form);
     }
@@ -109,6 +162,7 @@ export default function ProjectTrack() {
         id: project.id,
         data: { hours_logged: (project.hours_logged || 0) + h },
       });
+      toast.success(`Logged ${h} hours to ${project.title}`);
       setHoursToLog('');
     }
   };
@@ -116,11 +170,11 @@ export default function ProjectTrack() {
   const filtered = filter === 'all' ? projects : projects.filter(p => p.category === filter);
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
+    <div className="space-y-6 max-w-7xl mx-auto pb-12">
       <SectionHeader
-        title="Project Track"
-        subtitle="Log CAS hours, manage projects, and track your progress"
-        action={<Button onClick={openCreate}><Plus className="w-4 h-4 mr-2" /> New Project</Button>}
+        title="CAS Projects & Activities"
+        subtitle="Log CAS hours, manage projects, and track your milestone timelines"
+        action={<Button onClick={openCreate} className="bg-primary hover:bg-primary-hover"><Plus className="w-4 h-4 mr-2" /> New Project</Button>}
       />
 
       {/* ── Overall progress banner ── */}
@@ -201,89 +255,193 @@ export default function ProjectTrack() {
           <Button className="mt-4" onClick={openCreate}><PlusCircle className="w-4 h-4 mr-2" /> Create Project</Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-6">
           <AnimatePresence mode="popLayout">
             {filtered.map((project, i) => {
               const cat = categoryConfig[project.category] || categoryConfig.creativity;
               const progress = project.target_hours
                 ? Math.min((project.hours_logged / project.target_hours) * 100, 100)
                 : 0;
+              const isTimelineOpen = expandedTimelines.includes(project.id);
+              const hasMilestones = !!project.milestones;
+
               return (
                 <motion.div
                   key={project.id}
                   layout
-                  initial={{ opacity: 0, scale: 0.95 }}
+                  initial={{ opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
                   transition={{ delay: i * 0.03 }}
-                  className="bg-card rounded-xl border border-border p-5 hover:shadow-lg transition-shadow flex flex-col gap-3"
+                  className="bg-card rounded-xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-4"
                 >
-                  {/* Header */}
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className={`w-8 h-8 rounded-lg ${cat.color} flex items-center justify-center flex-shrink-0`}>
-                        <cat.icon className="w-4 h-4 text-white" />
+                  <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                    {/* Header: Title and details */}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className={`w-8 h-8 rounded-lg ${cat.color} flex items-center justify-center flex-shrink-0`}>
+                          <cat.icon className="w-4 h-4 text-white" />
+                        </div>
+                        <span className={`text-xs font-semibold ${cat.text} uppercase tracking-wider`}>{cat.label}</span>
+                        {hasMilestones && (
+                          <span className="text-[10px] text-primary bg-primary/10 px-2 py-0.5 rounded-full font-medium flex items-center gap-1 font-sans">
+                            <Sparkles className="w-3 h-3 text-primary" /> Long-term Timeline
+                          </span>
+                        )}
                       </div>
-                      <span className={`text-xs font-semibold ${cat.text}`}>{cat.label}</span>
+
+                      <h4 className="font-heading font-semibold text-lg leading-snug">{project.title}</h4>
+                      {project.description && (
+                        <p className="text-xs text-muted-foreground mt-1 max-w-2xl leading-relaxed">{project.description}</p>
+                      )}
                     </div>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button className="text-muted-foreground hover:text-foreground p-1">
-                          <MoreVertical className="w-4 h-4" />
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => { setLogHoursId(project.id); setHoursToLog(''); }}>
-                          <Clock className="w-3.5 h-3.5 mr-2" /> Log Hours
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => openEdit(project)}>
-                          <Pencil className="w-3.5 h-3.5 mr-2" /> Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => deleteProject.mutate(project.id)} className="text-destructive">
-                          <Trash2 className="w-3.5 h-3.5 mr-2" /> Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
 
-                  {/* Title + description */}
-                  <div>
-                    <h4 className="font-heading font-semibold text-sm leading-snug">{project.title}</h4>
-                    {project.description && (
-                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{project.description}</p>
-                    )}
-                  </div>
+                    {/* Actions and status */}
+                    <div className="flex items-center gap-3 self-end md:self-start">
+                      <span className={`text-xs px-2.5 py-1 rounded-full capitalize font-semibold ${
+                        project.status === 'completed'  ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20' :
+                        project.status === 'in_progress'? 'bg-primary/10 text-primary border border-primary/20'         :
+                        project.status === 'paused'     ? 'bg-amber-500/10 text-amber-600 border border-amber-500/20'     :
+                                                          'bg-muted text-muted-foreground border border-border'
+                      }`}>
+                        {project.status?.replace('_', ' ')}
+                      </span>
 
-                  {/* Hours progress */}
-                  <div>
-                    <div className="flex items-center justify-between text-xs mb-1.5">
-                      <span className="text-muted-foreground font-medium">
-                        {(project.hours_logged || 0).toFixed(1)}h logged
-                      </span>
-                      <span className="font-semibold">
-                        {progress.toFixed(0)}% of {project.target_hours || 10}h target
-                      </span>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="text-muted-foreground hover:text-foreground p-1.5 rounded-md border border-border hover:bg-muted/50 transition-colors">
+                            <MoreVertical className="w-4 h-4" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => { setLogHoursId(project.id); setHoursToLog(''); }}>
+                            <Clock className="w-3.5 h-3.5 mr-2" /> Log Hours
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => openEdit(project)}>
+                            <Pencil className="w-3.5 h-3.5 mr-2" /> Edit Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => deleteProject.mutate(project.id)} className="text-destructive">
+                            <Trash2 className="w-3.5 h-3.5 mr-2" /> Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
-                    <Progress value={progress} className="h-2" />
                   </div>
 
-                  {/* Footer */}
-                  <div className="flex items-center justify-between">
-                    <span className={`text-xs px-2 py-0.5 rounded-full capitalize font-medium ${
-                      project.status === 'completed'  ? 'bg-emerald-500/10 text-emerald-600' :
-                      project.status === 'in_progress'? 'bg-primary/10 text-primary'         :
-                      project.status === 'paused'     ? 'bg-amber-500/10 text-amber-600'     :
-                                                        'bg-muted text-muted-foreground'
-                    }`}>
-                      {project.status?.replace('_', ' ')}
-                    </span>
-                    <button
-                      onClick={() => { setLogHoursId(project.id); setHoursToLog(''); }}
-                      className="text-xs text-primary hover:underline flex items-center gap-1"
-                    >
-                      <Clock className="w-3 h-3" /> Log hours
-                    </button>
+                  {/* Progress segment */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-4 py-2 border-y border-border/40">
+                    <div>
+                      <span className="text-[10px] text-muted-foreground uppercase font-semibold block mb-0.5">Timeline Dates</span>
+                      <span className="text-xs font-medium text-foreground">{project.start_date || 'N/A'} to {project.end_date || 'N/A'}</span>
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <div className="flex items-center justify-between text-xs mb-1">
+                        <span className="text-muted-foreground font-semibold">
+                          {(project.hours_logged || 0).toFixed(1)}h logged
+                        </span>
+                        <span className="font-semibold text-primary">
+                          {progress.toFixed(0)}% of {project.target_hours || 10}h target
+                        </span>
+                      </div>
+                      <Progress value={progress} className="h-2" />
+                    </div>
                   </div>
+
+                  {/* Timeline steppers block */}
+                  {hasMilestones && (
+                    <div className="mt-2">
+                      <button
+                        onClick={() => toggleTimeline(project.id)}
+                        className="flex items-center gap-1.5 text-xs text-primary font-semibold hover:underline"
+                      >
+                        {isTimelineOpen ? (
+                          <>
+                            <ChevronUp className="w-4 h-4" /> Hide Interactive Timeline
+                          </>
+                        ) : (
+                          <>
+                            <ChevronDown className="w-4 h-4" /> Show Interactive Timeline ({project.milestones.filter(m => m.status === 'completed').length}/{project.milestones.length} done)
+                          </>
+                        )}
+                      </button>
+
+                      <AnimatePresence>
+                        {isTimelineOpen && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="pt-6 pb-2 pl-4 pr-2 space-y-6 relative border-l border-dashed border-border/80 ml-3.5 my-3">
+                              <p className="text-[10px] text-muted-foreground italic flex items-center gap-1 -mt-2 mb-4 bg-muted/40 p-2 rounded border border-border/40 max-w-sm">
+                                <AlertCircle className="w-3.5 h-3.5 text-primary flex-shrink-0" /> Click any step below to change its progress state!
+                              </p>
+
+                              {project.milestones.map((m) => {
+                                const isDone = m.status === 'completed';
+                                const isInProgress = m.status === 'in_progress';
+                                
+                                return (
+                                  <motion.div
+                                    key={m.id}
+                                    whileHover={{ x: 3 }}
+                                    onClick={() => handleToggleMilestone(project, m.id)}
+                                    className="flex items-start gap-4 relative group cursor-pointer"
+                                  >
+                                    {/* Icon / dot */}
+                                    <div className="absolute -left-[27px] top-0.5 z-10 flex items-center justify-center">
+                                      {isDone ? (
+                                        <div className="w-5 h-5 rounded-full bg-emerald-500 border-2 border-background flex items-center justify-center shadow-sm">
+                                          <Check className="w-3 h-3 text-white stroke-[3px]" />
+                                        </div>
+                                      ) : isInProgress ? (
+                                        <div className="w-5 h-5 rounded-full bg-primary border-2 border-background flex items-center justify-center animate-pulse shadow">
+                                          <Clock className="w-3 h-3 text-white" />
+                                        </div>
+                                      ) : (
+                                        <div className="w-5 h-5 rounded-full bg-muted border-2 border-border flex items-center justify-center group-hover:border-primary transition-colors" />
+                                      )}
+                                    </div>
+
+                                    {/* Content */}
+                                    <div className="flex-1">
+                                      <div className="flex items-center gap-2">
+                                        <span className={`text-xs font-semibold ${
+                                          isDone ? 'text-emerald-600 dark:text-emerald-400 line-through' :
+                                          isInProgress ? 'text-primary font-bold' :
+                                          'text-muted-foreground'
+                                        }`}>
+                                          {m.title}
+                                        </span>
+                                        <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-medium ${
+                                          isDone ? 'bg-emerald-500/10 text-emerald-600' :
+                                          isInProgress ? 'bg-primary/10 text-primary animate-pulse' :
+                                          'bg-muted text-muted-foreground'
+                                        }`}>
+                                          {m.status}
+                                        </span>
+                                      </div>
+                                      <p className="text-[10px] text-muted-foreground mt-0.5">Timeline target: {m.due}</p>
+                                    </div>
+                                  </motion.div>
+                                );
+                              })}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  )}
+
+                  {/* Reflections block if present */}
+                  {project.reflections && (
+                    <div className="text-xs bg-muted/40 rounded-lg p-3 border border-border/40">
+                      <span className="font-semibold text-primary block mb-1">Reflections</span>
+                      <p className="text-muted-foreground italic leading-relaxed">"{project.reflections}"</p>
+                    </div>
+                  )}
                 </motion.div>
               );
             })}
@@ -295,7 +453,7 @@ export default function ProjectTrack() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="font-heading">{editProject ? 'Edit Project' : 'New CAS Project'}</DialogTitle>
+            <DialogTitle className="font-heading">{editProject ? 'Edit CAS Project' : 'New CAS Project'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <Input

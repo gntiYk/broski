@@ -8,26 +8,39 @@ import { Input } from '@/components/ui/input';
 import { Send, Sparkles, User, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
-const suggestions = [
-  'Help me plan my CAS project',
-  'What are some creative CAS ideas?',
-  'How do I write a good CAS reflection?',
-  'Suggest a weekly study schedule',
-  'Tips for balancing CAS and academics',
-  'How many CAS hours do I need?',
-];
-
 export default function ChatbotPage() {
   const { user } = useAuth();
-  const [messages, setMessages] = useState([
-    {
-      role: 'assistant',
-      content: `Hi ${user?.full_name?.split(' ')[0] || 'there'}! 👋 I'm your shineUEcas AI Assistant. I can help you with CAS planning, project ideas, study schedules, reflection writing, and more. How can I help you today?`
-    }
-  ]);
+  const isStudent = user?.role === 'student';
+
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const chatEndRef = useRef(null);
+
+  const suggestions = isStudent ? [
+    'Explain IGCSE Physics Newton laws',
+    'Help with Math quadratic equations',
+    'Give a study schedule for English ESL',
+    'How does aerobic cell respiration work?',
+    'Tips for IGCSE Chemistry atomic structure',
+    'Review Mandarin Chinese tones'
+  ] : [
+    'Help me plan my CAS project',
+    'What are some creative CAS ideas?',
+    'How do I write a good CAS reflection?',
+    'Suggest a weekly study schedule',
+    'Tips for balancing CAS and academics',
+    'How many CAS hours do I need?',
+  ];
+
+  useEffect(() => {
+    if (user) {
+      const welcome = isStudent 
+        ? `Hi ${user.full_name?.split(' ')[0] || 'there'}! 👋 I'm your shineUE IGCSE AI Assistant. I can help you with your homework, IGCSE subject questions, study tips, or quiz reviews. How can I help you today?`
+        : `Hi ${user.full_name?.split(' ')[0] || 'there'}! 👋 I'm your shineUEcas AI Assistant. I can help you with CAS planning, project ideas, study schedules, reflection writing, and more. How can I help you today?`;
+      setMessages([{ role: 'assistant', content: welcome }]);
+    }
+  }, [user, isStudent]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -46,8 +59,20 @@ export default function ChatbotPage() {
       .map(m => `${m.role === 'user' ? 'Student' : 'AI Assistant'}: ${m.content}`)
       .join('\n');
 
-    const response = await api.chatbot.sendMessage({
-      prompt: `You are shineUEcas AI Assistant — a helpful, friendly, and knowledgeable CAS (Creativity, Activity, Service) advisor for IB students. You help with:
+    const systemPrompt = isStudent
+      ? `You are shineUE IGCSE AI Assistant — a helpful, friendly, and expert academic tutor for middle schoolers. You help with:
+- Explaining IGCSE subjects including Mathematics, Physics, Chemistry, Biology, ESL, ICT, Global Perspectives, and Mandarin Chinese
+- Breaking down homework problems step-by-step
+- Providing study guides, exam preparation tips, and time management block schedules
+- Motivating students and keeping them engaged
+
+Do NOT mention CAS, projects, or IB under any circumstances. Keep explanations highly intuitive, visual, and simple for middle school students. Use markdown formatting and LaTeX equations (e.g. $$F = m \\cdot a$$) for math/science where appropriate. Keep responses concise and under 300 words unless detail is requested.
+
+Conversation:
+${conversationHistory}
+
+Respond as the AI Assistant:`
+      : `You are shineUEcas AI Assistant — a helpful, friendly, and knowledgeable CAS (Creativity, Activity, Service) advisor for IB students. You help with:
 - CAS project planning, ideas, and reflection writing
 - Study scheduling and time management
 - Tutoring guidance and academic advice
@@ -59,7 +84,10 @@ Be concise, encouraging, and practical. Use markdown formatting for structured r
 Conversation:
 ${conversationHistory}
 
-Respond as the AI Assistant:`,
+Respond as the AI Assistant:`;
+
+    const response = await api.chatbot.sendMessage({
+      prompt: systemPrompt,
     });
 
     setMessages(prev => [...prev, { role: 'assistant', content: response }]);
@@ -68,7 +96,10 @@ Respond as the AI Assistant:`,
 
   return (
     <div className="space-y-4 max-w-4xl mx-auto h-[calc(100vh-8rem)] flex flex-col">
-      <SectionHeader title="AI Assistant" subtitle="Get help with CAS planning, study tips, and more" />
+      <SectionHeader 
+        title="AI Assistant" 
+        subtitle={isStudent ? "Get homework help, study tips, and quiz reviews" : "Get help with CAS planning, study tips, and more"} 
+      />
 
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto rounded-xl bg-card border border-border p-4 space-y-4">
@@ -147,7 +178,7 @@ Respond as the AI Assistant:`,
       {/* Input */}
       <div className="flex gap-2">
         <Input
-          placeholder="Ask me anything about CAS, studying, or planning..."
+          placeholder={isStudent ? "Ask me anything about your IGCSE subjects, homework..." : "Ask me anything about CAS, studying, or planning..."}
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && sendMessage()}

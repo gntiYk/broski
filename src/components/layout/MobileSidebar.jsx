@@ -18,7 +18,7 @@ export default function MobileSidebar({ open, onClose }) {
   if (role === 'tutor') {
     menuItems.push(
       { path: '/tutor', icon: LayoutDashboard, label: 'Dashboard' },
-<<<<<<< HEAD
+      { path: '/tutor/projects', icon: FolderKanban, label: 'CAS Projects' },
       { path: '/tutor/calendar', icon: CalendarDays, label: 'Calendar' },
       { path: '/tutor/chatbot', icon: Bot, label: 'AI Assistant' },
       { path: '/tutor/notifications', icon: Bell, label: 'Notifications' },
@@ -29,23 +29,7 @@ export default function MobileSidebar({ open, onClose }) {
       { path: '/student', icon: LayoutDashboard, label: 'Dashboard' },
       { path: '/student/booking', icon: BookOpen, label: 'Booking' },
       { path: '/student/calendar', icon: CalendarDays, label: 'Calendar' },
-      { path: '/student/projects', icon: FolderKanban, label: 'Projects' },
       { path: '/student/chatbot', icon: Bot, label: 'AI Assistant' },
-=======
-      { path: '/projects', icon: FolderKanban, label: 'Project Track' },
-      { path: '/calendar', icon: CalendarDays, label: 'Calendar' },
-      { path: '/chatbot', icon: Bot, label: 'AI Assistant' },
-      { path: '/notifications', icon: Bell, label: 'Notifications' },
-      { path: '/settings', icon: Settings, label: 'Settings' },
-    );
-  } else {
-    menuItems.push(
-      { path: '/booking', icon: BookOpen, label: 'Booking' },
-      { path: '/calendar', icon: CalendarDays, label: 'Calendar' },
-      { path: '/chatbot', icon: Bot, label: 'AI Assistant' },
-      { path: '/notifications', icon: Bell, label: 'Notifications' },
-      { path: '/settings', icon: Settings, label: 'Settings' },
->>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
     );
   }
 
@@ -83,12 +67,7 @@ export default function MobileSidebar({ open, onClose }) {
             <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
               {menuItems.map((item) => {
                 const isActive = location.pathname === item.path || 
-<<<<<<< HEAD
                   location.pathname.startsWith(item.path + '/');
-=======
-                  (item.path === '/tutor' && location.pathname === '/' && role === 'tutor') || 
-                  (item.path === '/booking' && location.pathname === '/' && role === 'student');
->>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
                 return (
                   <Link key={item.path} to={item.path} onClick={onClose}>
                     <div className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${isActive

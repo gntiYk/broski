@@ -104,7 +104,6 @@ export default function Login() {
         </div>
       )}
 
-<<<<<<< HEAD
       {/* Demo Credentials Hint */}
       <div className="mb-4 bg-primary/5 border border-primary/10 rounded-lg p-3 text-xs">
         <p className="font-medium text-primary mb-2">Demo Credentials:</p>
@@ -114,9 +113,6 @@ export default function Login() {
           <p className="text-muted-foreground">Email: <span className="font-mono text-xs">tutor@example.com</span> | Pass: <span className="font-mono text-xs">tutor123</span></p>
         )}
       </div>
-
-=======
->>>>>>> 70147242d59ea2e29a56be4e64435702841dfbb1
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email">Имэйл хаяг</Label>
