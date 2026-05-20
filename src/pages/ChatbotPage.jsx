@@ -62,7 +62,7 @@ Be concise, encouraging, and practical. Use markdown formatting for structured r
       const responseText = await geminiService.generateChatResponse(chatHistory, content, user?.role || 'student');
       setMessages(prev => [...prev, { role: 'assistant', content: responseText }]);
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Oops! The AI is currently unavailable. Please make sure your Gemini API Key is configured in Vercel Environment Variables (`VITE_GEMINI_API_KEY`).' }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: `Oops! The AI is currently unavailable. Error details: ${error.message || error}` }]);
     }
     setLoading(false);
   };
