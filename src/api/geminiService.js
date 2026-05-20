@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// Initialize the API with the Vercel Environment Variable
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
+// Hardcoded for immediate fix since Vercel Env Vars are heavily caching/failing
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'AIzaSyCiAQfdMgVGDGwHzyYh4I5yGBe0HoNskyY';
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 export const geminiService = {
