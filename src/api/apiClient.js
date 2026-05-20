@@ -187,6 +187,25 @@ export const api = {
       if (stored) return JSON.parse(stored);
       return null;
     },
+    updateMe: async (data) => {
+      const stored = localStorage.getItem('mock_user');
+      if (stored) {
+        const currentUser = JSON.parse(stored);
+        const updatedUser = { ...currentUser, ...data };
+        localStorage.setItem('mock_user', JSON.stringify(updatedUser));
+        
+        // Also update the persistent user entry in broski_users
+        const users = getStorageItem('broski_users');
+        const idx = users.findIndex(u => u.email === currentUser.email);
+        if (idx !== -1) {
+          users[idx] = { ...users[idx], ...data };
+          setStorageItem('broski_users', users);
+        }
+        
+        return updatedUser;
+      }
+      return null;
+    },
     logout: async () => {
       console.log('Mock logout');
       localStorage.removeItem('mock_user');

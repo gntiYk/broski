@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 
 export default function SettingsPage() {
-  const { user } = useAuth();
+  const { user, checkUserAuth } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [bio, setBio] = useState('');
   const [subjects, setSubjects] = useState('');
@@ -28,11 +28,18 @@ export default function SettingsPage() {
 
   const handleSave = async () => {
     setSaving(true);
-    await api.auth.updateMe({
-      bio,
-      subjects: subjects.split(',').map(s => s.trim()).filter(Boolean),
-    });
-    toast.success('Settings saved');
+    try {
+      await api.auth.updateMe({
+        bio,
+        subjects: subjects.split(',').map(s => s.trim()).filter(Boolean),
+      });
+      if (checkUserAuth) {
+        await checkUserAuth();
+      }
+      toast.success('Settings saved successfully!');
+    } catch (err) {
+      toast.error('Failed to save settings');
+    }
     setSaving(false);
   };
 
