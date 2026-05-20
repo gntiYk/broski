@@ -104,7 +104,7 @@ const createPersistence = (storageKey) => {
 
 // Force update names in localStorage if old names exist or if student2 exists
 const existingUsers = localStorage.getItem('broski_users');
-if (existingUsers && (existingUsers.includes('Дорж') || existingUsers.includes('Зориг') || existingUsers.includes('Сарнай') || existingUsers.includes('student2@example.com'))) {
+if (existingUsers && (existingUsers.includes('Дорж') || existingUsers.includes('Зориг') || existingUsers.includes('Сарнай') || existingUsers.includes('student@example.com') || existingUsers.includes('student2@example.com'))) {
   localStorage.removeItem('broski_users');
   localStorage.removeItem('broski_bookings');
   localStorage.removeItem('mock_user');
@@ -119,7 +119,7 @@ if (storedProjects.length !== 1 || storedProjects[0]?.id !== 'p1' || !storedProj
   localStorage.setItem('broski_projects', JSON.stringify([
     {
       id: 'p1',
-      student_email: 'tutor@example.com',
+      student_email: 'zorigt@example.com',
       title: 'Шинэ Үе ногоон төгөл',
       description: 'Сургуулийнхаа цэцэрлэгт мод тарьж нийгмийн тустай үйлс хийх төсөл.',
       category: 'service',
@@ -143,22 +143,22 @@ if (storedProjects.length !== 1 || storedProjects[0]?.id !== 'p1' || !storedProj
 
 if (!localStorage.getItem('broski_bookings')) {
   localStorage.setItem('broski_bookings', JSON.stringify([
-    { id: 'b1', student_email: 'student@example.com', student_name: 'Student Gantigmaa', tutor_email: 'tutor@example.com', subject: 'Математикийн давтлага', status: 'pending', date: '2026-05-20', time_slot: '14:00 - 15:00', notes: 'Тэгшитгэл бодох болон интегралын тухай давтах хүсэлтэй байна.', created_date: new Date().toISOString() },
-    { id: 'b2', student_email: 'student@example.com', student_name: 'Student Gantigmaa', tutor_email: 'tutor@example.com', subject: 'Физикийн хичээл', status: 'approved', date: '2026-05-21', time_slot: '16:00 - 17:00', notes: 'Ньютоны хуулиудын дадлага даалгавар бодно.', created_date: new Date().toISOString() }
+    { id: 'b1', student_email: 'gantigmaa@example.com', student_name: 'Student Gantigmaa', tutor_email: 'zorigt@example.com', subject: 'Математикийн давтлага', status: 'pending', date: '2026-05-20', time_slot: '14:00 - 15:00', notes: 'Тэгшитгэл бодох болон интегралын тухай давтах хүсэлтэй байна.', created_date: new Date().toISOString() },
+    { id: 'b2', student_email: 'gantigmaa@example.com', student_name: 'Student Gantigmaa', tutor_email: 'zorigt@example.com', subject: 'Физикийн хичээл', status: 'approved', date: '2026-05-21', time_slot: '16:00 - 17:00', notes: 'Ньютоны хуулиудын дадлага даалгавар бодно.', created_date: new Date().toISOString() }
   ]));
 }
 
 if (!localStorage.getItem('broski_users')) {
   localStorage.setItem('broski_users', JSON.stringify([
-    { email: 'student@example.com', full_name: 'Student Gantigmaa', role: 'student', password: 'student123' },
-    { email: 'tutor@example.com', full_name: 'Tutor Zorigt', role: 'tutor', password: 'tutor123' }
+    { email: 'gantigmaa@example.com', full_name: 'Student Gantigmaa', role: 'student', password: 'gantigmaa123' },
+    { email: 'zorigt@example.com', full_name: 'Tutor Zorigt', role: 'tutor', password: 'zorigt123' }
   ]));
 }
 
 // Initialize demo notifications
 if (!localStorage.getItem('broski_notifications')) {
   localStorage.setItem('broski_notifications', JSON.stringify([
-    { id: 'n1', tutor_email: 'tutor@example.com', message: 'Student Gantigmaa математикийн давтлагыг зааж өгөхийг хүсэлтэй байна', type: 'booking', read: false, created_date: new Date(Date.now() - 86400000).toISOString(), data: { booking_id: 'b1' } }
+    { id: 'n1', tutor_email: 'zorigt@example.com', message: 'Student Gantigmaa математикийн давтлагыг зааж өгөхийг хүсэлтэй байна', type: 'booking', read: false, created_date: new Date(Date.now() - 86400000).toISOString(), data: { booking_id: 'b1' } }
   ]));
 }
 
@@ -167,7 +167,7 @@ export const api = {
     loginViaEmailPassword: async (email, password, role = 'student') => {
       console.log('Mock login:', email, 'Role:', role);
       
-      const allowedEmails = ['student@example.com', 'tutor@example.com'];
+      const allowedEmails = ['gantigmaa@example.com', 'zorigt@example.com'];
       if (!allowedEmails.includes(email)) {
         throw new Error("Зөвхөн demo хаягаар нэвтрэх боломжтой.");
       }

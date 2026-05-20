@@ -78,11 +78,11 @@ export default function Landing() {
               <div className="space-y-3 mb-4">
                 <div>
                   <p className="text-xs text-muted-foreground">Email</p>
-                  <p className="font-mono text-sm">student@example.com</p>
+                  <p className="font-mono text-sm">gantigmaa@example.com</p>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Password</p>
-                  <p className="font-mono text-sm">student123</p>
+                  <p className="font-mono text-sm">gantigmaa123</p>
                 </div>
               </div>
               <Link to="/login" className="w-full">
@@ -105,11 +105,11 @@ export default function Landing() {
               <div className="space-y-3 mb-4">
                 <div>
                   <p className="text-xs text-muted-foreground">Email</p>
-                  <p className="font-mono text-sm">tutor@example.com</p>
+                  <p className="font-mono text-sm">zorigt@example.com</p>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Password</p>
-                  <p className="font-mono text-sm">tutor123</p>
+                  <p className="font-mono text-sm">zorigt123</p>
                 </div>
               </div>
               <Link to="/login" className="w-full">

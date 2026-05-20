@@ -168,7 +168,9 @@ export default function CalendarPage() {
           <div className="mt-6 pt-4 border-t border-border">
             <p className="text-xs font-medium text-muted-foreground mb-2">Event Types</p>
             <div className="grid grid-cols-2 gap-1">
-              {Object.entries(typeColors).map(([type, color]) => (
+              {Object.entries(typeColors)
+                .filter(([type]) => !(type === 'cas_work' && user?.role === 'student'))
+                .map(([type, color]) => (
                 <div key={type} className="flex items-center gap-1.5 text-[10px]">
                   <div className={`w-2 h-2 rounded-full ${color}`} />
                   <span className="capitalize text-muted-foreground">{type.replace('_', ' ')}</span>
@@ -192,7 +194,7 @@ export default function CalendarPage() {
               <SelectContent>
                 <SelectItem value="study">Study</SelectItem>
                 <SelectItem value="tutoring">Tutoring</SelectItem>
-                <SelectItem value="cas_work">CAS Work</SelectItem>
+                {user?.role !== 'student' && <SelectItem value="cas_work">CAS Work</SelectItem>}
                 <SelectItem value="deadline">Deadline</SelectItem>
                 <SelectItem value="reminder">Reminder</SelectItem>
                 <SelectItem value="personal">Personal</SelectItem>

@@ -4,13 +4,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, GraduationCap, Users, FolderKanban,
   CalendarDays, BookOpen, MessageCircle, Bot, Bell,
-  Settings, X, Sparkles, LogOut
+  Settings, X, Sparkles, LogOut, Sun, Moon
 } from 'lucide-react';
 import { useAuth } from '@/lib/AuthContext';
+import { useTheme } from '../ThemeProvider';
 
 export default function MobileSidebar({ open, onClose }) {
   const location = useLocation();
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   const role = user?.role || 'student';
 
@@ -82,7 +84,16 @@ export default function MobileSidebar({ open, onClose }) {
                 );
               })}
             </nav>
-            <div className="px-3 py-4 border-t border-sidebar-border">
+            <div className="px-3 py-4 border-t border-sidebar-border space-y-2">
+              <button
+                onClick={toggleTheme}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors w-full"
+              >
+                {theme === 'light' ? <Moon className="w-5 h-5 flex-shrink-0" /> : <Sun className="w-5 h-5 flex-shrink-0" />}
+                <span className="text-sm">
+                  {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+                </span>
+              </button>
               <button
                 onClick={() => logout()}
                 className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground/70 hover:bg-destructive/10 hover:text-destructive transition-colors w-full"

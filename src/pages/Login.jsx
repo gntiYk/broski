@@ -72,9 +72,9 @@ export default function Login() {
       <div className="mb-4 bg-primary/5 border border-primary/10 rounded-lg p-3 text-xs">
         <p className="font-medium text-primary mb-2">demo:</p>
         {role === 'student' ? (
-          <p className="text-muted-foreground">Email: <span className="font-mono text-xs">student@example.com</span> | Pass: <span className="font-mono text-xs">student123</span></p>
+          <p className="text-muted-foreground">Email: <span className="font-mono text-xs">gantigmaa@example.com</span> | Pass: <span className="font-mono text-xs">gantigmaa123</span></p>
         ) : (
-          <p className="text-muted-foreground">Email: <span className="font-mono text-xs">tutor@example.com</span> | Pass: <span className="font-mono text-xs">tutor123</span></p>
+          <p className="text-muted-foreground">Email: <span className="font-mono text-xs">zorigt@example.com</span> | Pass: <span className="font-mono text-xs">zorigt123</span></p>
         )}
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
