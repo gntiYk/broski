@@ -104,7 +104,7 @@ const createPersistence = (storageKey) => {
 
 // Initialize beautiful demo data if empty
 let storedProjects = getStorageItem('broski_projects', []);
-if (storedProjects.length === 0 || !storedProjects.some(p => p.id === 'p1' && p.milestones)) {
+if (storedProjects.length !== 1 || storedProjects[0]?.id !== 'p1' || !storedProjects[0]?.milestones) {
   localStorage.setItem('broski_projects', JSON.stringify([
     {
       id: 'p1',
