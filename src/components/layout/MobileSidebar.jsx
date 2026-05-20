@@ -30,6 +30,7 @@ export default function MobileSidebar({ open, onClose }) {
       { path: '/student/booking', icon: BookOpen, label: 'Booking' },
       { path: '/student/calendar', icon: CalendarDays, label: 'Calendar' },
       { path: '/student/chatbot', icon: Bot, label: 'AI Assistant' },
+      { path: '/student/settings', icon: Settings, label: 'Settings' },
     );
   }
 

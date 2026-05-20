@@ -5,11 +5,7 @@ import { api } from '@/api/apiClient';
 import { useAuth } from '@/lib/AuthContext';
 import SectionHeader from '@/components/shared/SectionHeader';
 import StatCard from '@/components/shared/StatCard';
-import {
-  Clock, Award, BookOpen, Brain, Zap, Sparkles, CheckCircle2,
-  XCircle, Trophy, Play, Star, ShieldAlert, GraduationCap, ChevronRight
-} from 'lucide-react';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { CheckCircle2, XCircle, ChevronRight } from 'lucide-react';
 
 // Synthetic sound helper using browser Web Audio API
 const playSound = (type) => {
@@ -296,12 +292,10 @@ const QUIZZES = {
 export default function StudentDashboard() {
   const { user } = useAuth();
   
-  // Custom states for points, quiz progress, and badges
+  // Custom states for points and quiz progress
   const [studentStats, setStudentStats] = useState({
-    studyHours: 12.5,
     quizPoints: 150,
-    quizzesCompleted: 3,
-    unlockedBadges: ['Math Whiz']
+    quizzesCompleted: 3
   });
 
   // Load persistent stats
@@ -375,63 +369,40 @@ export default function StudentDashboard() {
       setQuizFinished(true);
       
       const newPoints = studentStats.quizPoints + (correctAnswersCount * 10);
-      const isPerfect = correctAnswersCount === quiz.questions.length;
-      let updatedBadges = [...studentStats.unlockedBadges];
-      
-      if (isPerfect && !updatedBadges.includes(quiz.badge)) {
-        updatedBadges.push(quiz.badge);
-        playSound('victory');
-      }
+      playSound('victory');
 
       saveStats({
-        studyHours: studentStats.studyHours + 0.5,
         quizPoints: newPoints,
-        quizzesCompleted: studentStats.quizzesCompleted + 1,
-        unlockedBadges: updatedBadges
+        quizzesCompleted: studentStats.quizzesCompleted + 1
       });
     }
   };
 
-  // Generate simulated chart study hours data
-  const studyData = [
-    { week: 'W1', hours: 6 },
-    { week: 'W2', hours: 9 },
-    { week: 'W3', hours: 8.5 },
-    { week: 'W4', hours: 11 },
-    { week: 'W5', hours: 14 },
-    { week: 'W6', hours: parseFloat(studentStats.studyHours.toFixed(1)) },
-  ];
-
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
-      <SectionHeader title="IGCSE Student Hub" subtitle="Explore study tools, book tutors, and master your subjects" />
+      <SectionHeader title="IGCSE Student" />
 
       {/* Stats Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={Clock} label="Study Hours" value={`${studentStats.studyHours.toFixed(1)}h`} trend={12} color="primary" delay={0} />
-        <StatCard icon={Zap} label="Quiz Points" value={studentStats.quizPoints} color="accent" delay={0.1} />
-        <StatCard icon={BookOpen} label="Tutors Booked" value={bookings.length} color="chart3" delay={0.2} />
-        <StatCard icon={Award} label="Badges Unlocked" value={`${studentStats.unlockedBadges.length}`} color="chart4" delay={0.3} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <StatCard label="Quiz Points" value={studentStats.quizPoints} color="accent" delay={0.1} />
+        <StatCard label="Tutors Booked" value={bookings.length} color="chart3" delay={0.2} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         {/* Interactive Subject Grid for IGCSE Quizzes */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="lg:col-span-2 bg-card rounded-xl border border-border p-6 shadow-sm flex flex-col justify-between"
+          className="bg-card rounded-xl border border-border p-6 shadow-sm flex flex-col justify-between"
         >
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <GraduationCap className="w-5 h-5 text-primary" />
-              <h3 className="font-heading font-semibold text-lg">IGCSE Interactive Quiz Hub</h3>
+            <div className="flex items-center gap-2 mb-6">
+              <h3 className="font-heading font-semibold text-lg">IGCSE Quiz</h3>
             </div>
-            <p className="text-xs text-muted-foreground mb-6">Take short quizzes created by upperclassmen tutors to earn points and unlock gorgeous subject badges!</p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
               {Object.entries(QUIZZES).map(([key, quiz], idx) => {
-                const hasBadge = studentStats.unlockedBadges.includes(quiz.badge);
                 return (
                   <motion.div
                     key={key}
@@ -439,19 +410,8 @@ export default function StudentDashboard() {
                     className="p-4 rounded-xl border border-border bg-gradient-to-br from-card to-muted/20 flex flex-col justify-between h-36 relative overflow-hidden"
                   >
                     <div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{quiz.subjectName}</span>
-                        {hasBadge ? (
-                          <span className="flex items-center gap-1 text-[10px] text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded-full font-medium">
-                            <Trophy className="w-3 h-3 text-amber-500 animate-pulse" /> unlocked
-                          </span>
-                        ) : (
-                          <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full font-medium">
-                            locked
-                          </span>
-                        )}
-                      </div>
-                      <h4 className="font-heading font-semibold text-sm mt-2">{quiz.badge}</h4>
+                      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{quiz.subjectName}</span>
+                      <h4 className="font-heading font-semibold text-sm mt-2">{quiz.subjectName}</h4>
                       <p className="text-[10px] text-muted-foreground mt-1">3 Multiple choice questions</p>
                     </div>
 
@@ -459,8 +419,7 @@ export default function StudentDashboard() {
                       onClick={() => startQuiz(key)}
                       className="mt-3 text-xs font-medium text-primary hover:text-primary-hover flex items-center gap-1 self-start group transition-colors"
                     >
-                      <Play className="w-3.5 h-3.5 fill-primary group-hover:scale-110 transition-transform" />
-                      <span>{hasBadge ? 'Retake Quiz' : 'Start Quiz'}</span>
+                      <span>Start Quiz</span>
                     </button>
                   </motion.div>
                 );
@@ -468,90 +427,19 @@ export default function StudentDashboard() {
             </div>
           </div>
         </motion.div>
-
-        {/* Weekly Study Trend */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-card rounded-xl border border-border p-6 shadow-sm flex flex-col"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-heading font-semibold text-sm">Weekly Study Hours</h3>
-            <span className="text-[10px] font-medium text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded-full">+1.5h vs last week</span>
-          </div>
-          <div className="flex-1 min-h-[160px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={studyData}>
-                <defs>
-                  <linearGradient id="colorHours" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.25} />
-                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <XAxis dataKey="week" tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" axisLine={false} tickLine={false} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: '8px',
-                    fontSize: '11px',
-                  }}
-                />
-                <Area type="monotone" dataKey="hours" stroke="hsl(var(--primary))" fill="url(#colorHours)" strokeWidth={2} />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </motion.div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Achievements / Badges List */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="bg-card rounded-xl border border-border p-6 shadow-sm"
-        >
-          <h3 className="font-heading font-semibold mb-4 flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-amber-500" />
-            Subject Badges
-          </h3>
-          <div className="space-y-3">
-            {Object.entries(QUIZZES).map(([key, quiz]) => {
-              const unlocked = studentStats.unlockedBadges.includes(quiz.badge);
-              return (
-                <div key={key} className={`flex items-center gap-3 p-3 rounded-lg ${unlocked ? 'bg-primary/5' : 'bg-muted/30 opacity-50'}`}>
-                  <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${unlocked ? 'bg-primary/15 text-primary' : 'bg-muted text-muted-foreground'}`}>
-                    <Star className={`w-4 h-4 ${unlocked ? 'fill-primary' : ''}`} />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-xs font-semibold">{quiz.badge}</p>
-                    <p className="text-[10px] text-muted-foreground">Mastery of {quiz.subjectName}</p>
-                  </div>
-                  {unlocked ? (
-                    <span className="text-[10px] text-primary font-semibold">✓ Unlocked</span>
-                  ) : (
-                    <span className="text-[10px] text-muted-foreground">Locked</span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </motion.div>
-
+      <div className="grid grid-cols-1 gap-6">
         {/* Timetable / Bookings */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="lg:col-span-2 bg-card rounded-xl border border-border p-6 shadow-sm"
+          className="bg-card rounded-xl border border-border p-6 shadow-sm"
         >
           <h3 className="font-heading font-semibold mb-4">Your Tutoring Schedule</h3>
           {bookings.length === 0 ? (
             <div className="text-center py-12">
-              <GraduationCap className="w-10 h-10 mx-auto mb-2 text-muted-foreground/30" />
               <p className="text-sm text-muted-foreground">No tutoring bookings found.</p>
               <p className="text-xs text-muted-foreground mt-0.5">Click 'Booking' in the sidebar to request your first academic session!</p>
             </div>
@@ -703,9 +591,6 @@ export default function StudentDashboard() {
               ) : (
                 /* QUIZ SUMMARY WINDOW */
                 <div className="text-center py-6">
-                  <div className="w-16 h-16 rounded-2xl bg-amber-500/10 flex items-center justify-center mx-auto mb-4 border border-amber-500/20">
-                    <Trophy className="w-8 h-8 text-amber-500 animate-bounce" />
-                  </div>
                   <h3 className="font-heading font-bold text-lg mb-2">Quiz Completed!</h3>
                   <p className="text-sm text-muted-foreground max-w-sm mx-auto mb-6">
                     You answered <span className="font-semibold text-primary">{correctAnswersCount} out of 3</span> questions correctly.
@@ -713,24 +598,8 @@ export default function StudentDashboard() {
 
                   <div className="bg-muted/30 rounded-xl p-4 max-w-sm mx-auto mb-8 border border-border/50 text-left space-y-2">
                     <div className="flex justify-between text-xs">
-                      <span className="text-muted-foreground">Study time awarded:</span>
-                      <span className="font-semibold text-foreground">+0.5 hours</span>
-                    </div>
-                    <div className="flex justify-between text-xs">
                       <span className="text-muted-foreground">Points earned:</span>
                       <span className="font-semibold text-foreground">+{correctAnswersCount * 10} pts</span>
-                    </div>
-                    <div className="flex justify-between text-xs items-center">
-                      <span className="text-muted-foreground">Badge status:</span>
-                      {correctAnswersCount === 3 ? (
-                        <span className="text-[10px] text-emerald-600 bg-emerald-500/10 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-                          <Star className="w-2.5 h-2.5 fill-amber-400 stroke-none" /> Unlocked {QUIZZES[activeQuizKey].badge}!
-                        </span>
-                      ) : (
-                        <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full font-medium">
-                          Perfect score required for badge
-                        </span>
-                      )}
                     </div>
                   </div>
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, Bell, Search } from 'lucide-react';
+import { Menu, Bell } from 'lucide-react';
 import { useAuth } from '@/lib/AuthContext';
 import { Link } from 'react-router-dom';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -17,14 +17,6 @@ export default function TopBar({ onMenuClick }) {
         >
           <Menu className="w-5 h-5" />
         </button>
-        <div className="hidden md:flex items-center gap-2 bg-muted/50 rounded-lg px-3 py-2 min-w-[240px]">
-          <Search className="w-4 h-4 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search anything..."
-            className="bg-transparent text-sm outline-none w-full text-foreground placeholder:text-muted-foreground"
-          />
-        </div>
       </div>
       <div className="flex items-center gap-3">
         <Link to="/notifications" className="relative p-2 rounded-lg hover:bg-muted/50 transition-colors text-muted-foreground hover:text-foreground">

@@ -7,14 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { useTheme } from '@/components/ThemeProvider';
-import { Sun, Moon, Save } from 'lucide-react';
+import { Save } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 
 export default function SettingsPage() {
   const { user, checkUserAuth } = useAuth();
-  const { theme, toggleTheme } = useTheme();
   const [bio, setBio] = useState('');
   const [subjects, setSubjects] = useState('');
   const [saving, setSaving] = useState(false);

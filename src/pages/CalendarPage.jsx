@@ -65,7 +65,6 @@ export default function CalendarPage() {
     <div className="space-y-6 max-w-7xl mx-auto">
       <SectionHeader
         title="Calendar"
-        subtitle="Schedule study blocks, CAS sessions, and deadlines"
         action={
           <Button onClick={() => { setSelectedDate(new Date()); setDialogOpen(true); }}>
             <Plus className="w-4 h-4 mr-2" /> Add Event

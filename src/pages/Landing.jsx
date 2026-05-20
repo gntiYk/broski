@@ -2,37 +2,12 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import {
-  Sparkles, ArrowRight, BookOpen, FolderKanban, CalendarDays,
-  Bot, Users, TrendingUp, Star, GraduationCap
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: (i = 0) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.6, ease: [0.4, 0, 0.2, 1] } }),
 };
-
-const features = [
-  { icon: FolderKanban, title: 'CAS Төсөл Хөтлөлт', desc: 'Бүтээлч, Идэвхтэй, Нийгмийн тустай ажлын цагаа бүртгэж, явцаа хянах' },
-  { icon: BookOpen, title: 'Багш Захиалга', desc: 'Хүссэн цагтаа багш нартай хичээлийн цаг товлож, сурлагадаа тусламж авах' },
-  { icon: CalendarDays, title: 'Ухаалаг Хуанли', desc: 'Хичээл давтах цаг, CAS ажил, даалгавар өгөх эцсийн хугацаа болон багштай уулзах цагаа нэг дороос төлөвлөх' },
-  { icon: Bot, title: 'AI Туслах', desc: 'Хувийн CAS зөвлөгөө, төслийн санаа, сургалтын төлөвлөлтийг хиймэл оюунаас авах' },
-  { icon: Users, title: 'Сурагч-Багшийн Чат', desc: 'Удирдамж, зөвлөгөө авахын тулд багш нартай шууд холбогдож цагаа зохицуулах' },
-  { icon: TrendingUp, title: 'Статистик Хянах Самбар', desc: 'Сурлагын явц, ололт амжилтаа үзүүлэн зураг, графикуудын тусламжтай харах' },
-];
-
-const stats = [
-  { value: '500+', label: 'Students Active' },
-  { value: '150+', label: 'CAS Hours Logged' },
-  { value: '50+', label: 'Tutors Available' },
-  { value: '98%', label: 'Satisfaction Rate' },
-];
-
-const testimonials = [
-  { name: 'Sarah M.', role: 'IB Student', text: 'shineUEcas completely transformed how I manage my CAS portfolio. The AI assistant helped me plan my entire service project!' },
-  { name: 'James K.', role: 'CAS Tutor', text: 'Managing tutoring requests and tracking student progress has never been easier. The booking system is fantastic.' },
-  { name: 'Dr. Patel', role: 'CAS Coordinator', text: 'Finally a platform that gives me oversight of student CAS progress. The analytics are incredibly helpful.' },
-];
 
 export default function Landing() {
   return (
@@ -41,14 +16,10 @@ export default function Landing() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-white" />
-            </div>
             <span className="font-heading font-bold text-lg">shine<span className="text-primary">UE</span>cas</span>
           </div>
           <div className="flex items-center gap-3">
-            <Link to="/login"><Button variant="ghost" size="sm">Нэвтрэх</Button></Link>
-            <Link to="/register"><Button size="sm">Бүртгүүлэх</Button></Link>
+            <Link to="/login"><Button size="sm">Нэвтрэх</Button></Link>
           </div>
         </div>
       </nav>
@@ -65,21 +36,15 @@ export default function Landing() {
             animate="visible"
             className="space-y-6"
           >
-
             <motion.h1 variants={fadeUp} custom={1} className="text-4xl sm:text-5xl lg:text-6xl font-heading font-extrabold leading-tight tracking-tight">
               Manage your CAS journey{' '}
               <span className="gradient-text">smarter</span>
             </motion.h1>
 
             <motion.div variants={fadeUp} custom={3} className="flex flex-wrap justify-center gap-3">
-              <Link to="/register">
-                <Button size="lg" className="px-8 gap-2">
-                  Бүртгүүлэх <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
               <Link to="/login">
-                <Button size="lg" variant="outline" className="px-8">
-                  Давтлага авах
+                <Button size="lg" className="px-8 gap-2">
+                  Нэвтрэх <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
             </motion.div>
@@ -97,7 +62,6 @@ export default function Landing() {
             className="text-center mb-12"
           >
             <h2 className="text-3xl font-heading font-bold mb-2">Try Demo Accounts</h2>
-            <p className="text-muted-foreground">Experience the platform with our test accounts</p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-6">
@@ -109,9 +73,6 @@ export default function Landing() {
               className="bg-card rounded-2xl border border-border p-6 hover:shadow-lg transition-shadow"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <GraduationCap className="w-5 h-5 text-primary" />
-                </div>
                 <h3 className="text-lg font-semibold">Student Account</h3>
               </div>
               <div className="space-y-3 mb-4">
@@ -124,9 +85,6 @@ export default function Landing() {
                   <p className="font-mono text-sm">student123</p>
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground mb-4">
-                Access student dashboard, book tutoring sessions, track CAS projects, and chat with AI assistant
-              </p>
               <Link to="/login" className="w-full">
                 <Button size="sm" className="w-full" variant="outline">
                   Sign in as Student
@@ -142,9 +100,6 @@ export default function Landing() {
               className="bg-card rounded-2xl border border-border p-6 hover:shadow-lg transition-shadow"
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
-                  <Users className="w-5 h-5 text-accent" />
-                </div>
                 <h3 className="text-lg font-semibold">Tutor Account</h3>
               </div>
               <div className="space-y-3 mb-4">
@@ -157,9 +112,6 @@ export default function Landing() {
                   <p className="font-mono text-sm">tutor123</p>
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground mb-4">
-                Manage tutoring requests, view notifications, approve bookings, and assist students
-              </p>
               <Link to="/login" className="w-full">
                 <Button size="sm" className="w-full" variant="outline">
                   Sign in as Tutor
@@ -173,7 +125,6 @@ export default function Landing() {
       <footer className="border-t border-border py-10 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-primary" />
             <span className="font-heading font-bold">shineUEcas</span>
           </div>
           <p className="text-sm text-muted-foreground">© 2026 shineUEcas. Шинэ Үе сургуулийн сурагчид бүтээв.</p>

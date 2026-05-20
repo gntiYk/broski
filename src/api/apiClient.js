@@ -102,9 +102,20 @@ const createPersistence = (storageKey) => {
   };
 };
 
+// Force update names in localStorage if old names exist or if student2 exists
+const existingUsers = localStorage.getItem('broski_users');
+if (existingUsers && (existingUsers.includes('Дорж') || existingUsers.includes('Зориг') || existingUsers.includes('Сарнай') || existingUsers.includes('student2@example.com'))) {
+  localStorage.removeItem('broski_users');
+  localStorage.removeItem('broski_bookings');
+  localStorage.removeItem('mock_user');
+  localStorage.removeItem('broski_notifications');
+  localStorage.removeItem('broski_projects');
+  localStorage.removeItem('broski_student_stats');
+}
+
 // Initialize beautiful demo data if empty
 let storedProjects = getStorageItem('broski_projects', []);
-if (storedProjects.length !== 1 || storedProjects[0]?.id !== 'p1' || !storedProjects[0]?.milestones) {
+if (storedProjects.length !== 1 || storedProjects[0]?.id !== 'p1' || !storedProjects[0]?.milestones || storedProjects[0]?.reflections) {
   localStorage.setItem('broski_projects', JSON.stringify([
     {
       id: 'p1',
@@ -117,7 +128,7 @@ if (storedProjects.length !== 1 || storedProjects[0]?.id !== 'p1' || !storedProj
       target_hours: 60,
       start_date: '2026-05-01',
       end_date: '2026-06-30',
-      reflections: 'Төсөл маань амжилттай үргэлжилж байгаа. Мод тарихаас гадна зүлэгжүүлэлт хийж байна.',
+      reflections: '',
       milestones: [
         {id: 'm1', title: 'Хөрс бэлтгэх, цэцэрлэг төлөвлөх', due: '2026-05-10', status: 'planned'},
         {id: 'm2', title: 'Модны суулгац, багаж хэрэгсэл бэлтгэх', due: '2026-05-12', status: 'planned'},
@@ -132,23 +143,22 @@ if (storedProjects.length !== 1 || storedProjects[0]?.id !== 'p1' || !storedProj
 
 if (!localStorage.getItem('broski_bookings')) {
   localStorage.setItem('broski_bookings', JSON.stringify([
-    { id: 'b1', student_email: 'student@example.com', student_name: 'Сурагч Дорж', tutor_email: 'tutor@example.com', subject: 'Математикийн давтлага', status: 'pending', date: '2026-05-20', time_slot: '14:00 - 15:00', notes: 'Тэгшитгэл бодох болон интегралын тухай давтах хүсэлтэй байна.', created_date: new Date().toISOString() },
-    { id: 'b2', student_email: 'student2@example.com', student_name: 'Сурагч Сарнай', tutor_email: 'tutor@example.com', subject: 'Физикийн хичээл', status: 'approved', date: '2026-05-21', time_slot: '16:00 - 17:00', notes: 'Ньютоны хуулиудын дадлага даалгавар бодно.', created_date: new Date().toISOString() }
+    { id: 'b1', student_email: 'student@example.com', student_name: 'Student Gantigmaa', tutor_email: 'tutor@example.com', subject: 'Математикийн давтлага', status: 'pending', date: '2026-05-20', time_slot: '14:00 - 15:00', notes: 'Тэгшитгэл бодох болон интегралын тухай давтах хүсэлтэй байна.', created_date: new Date().toISOString() },
+    { id: 'b2', student_email: 'student@example.com', student_name: 'Student Gantigmaa', tutor_email: 'tutor@example.com', subject: 'Физикийн хичээл', status: 'approved', date: '2026-05-21', time_slot: '16:00 - 17:00', notes: 'Ньютоны хуулиудын дадлага даалгавар бодно.', created_date: new Date().toISOString() }
   ]));
 }
 
 if (!localStorage.getItem('broski_users')) {
   localStorage.setItem('broski_users', JSON.stringify([
-    { email: 'student@example.com', full_name: 'Сурагч Дорж', role: 'student', password: 'student123' },
-    { email: 'student2@example.com', full_name: 'Сурагч Сарнай', role: 'student', password: 'student123' },
-    { email: 'tutor@example.com', full_name: 'Tutor Зориг', role: 'tutor', password: 'tutor123' }
+    { email: 'student@example.com', full_name: 'Student Gantigmaa', role: 'student', password: 'student123' },
+    { email: 'tutor@example.com', full_name: 'Tutor Zorigt', role: 'tutor', password: 'tutor123' }
   ]));
 }
 
 // Initialize demo notifications
 if (!localStorage.getItem('broski_notifications')) {
   localStorage.setItem('broski_notifications', JSON.stringify([
-    { id: 'n1', tutor_email: 'tutor@example.com', message: 'Сурагч Дорж математикийн давтлагыг зааж өгөхийг хүсэлтэй байна', type: 'booking', read: false, created_date: new Date(Date.now() - 86400000).toISOString(), data: { booking_id: 'b1' } }
+    { id: 'n1', tutor_email: 'tutor@example.com', message: 'Student Gantigmaa математикийн давтлагыг зааж өгөхийг хүсэлтэй байна', type: 'booking', read: false, created_date: new Date(Date.now() - 86400000).toISOString(), data: { booking_id: 'b1' } }
   ]));
 }
 
@@ -157,13 +167,15 @@ export const api = {
     loginViaEmailPassword: async (email, password, role = 'student') => {
       console.log('Mock login:', email, 'Role:', role);
       
-      // Save user to users persistence if not present
+      const allowedEmails = ['student@example.com', 'tutor@example.com'];
+      if (!allowedEmails.includes(email)) {
+        throw new Error("Зөвхөн demo хаягаар нэвтрэх боломжтой.");
+      }
+      
       const users = getStorageItem('broski_users');
-      let registered = users.find(u => u.email === email);
-      if (!registered) {
-        registered = { email, full_name: email.split('@')[0], role };
-        users.push(registered);
-        setStorageItem('broski_users', users);
+      const registered = users.find(u => u.email === email && u.role === role);
+      if (!registered || registered.password !== password) {
+        throw new Error("Нууц үг эсвэл үүрэг буруу байна.");
       }
       
       const user = { id: Math.random().toString(), email, role, full_name: registered.full_name };
@@ -171,16 +183,7 @@ export const api = {
       return { user };
     },
     register: async (email, password, name, role) => {
-      console.log('Mock register:', email, role);
-      
-      const users = getStorageItem('broski_users');
-      const registered = { email, full_name: name, role, password };
-      users.push(registered);
-      setStorageItem('broski_users', users);
-      
-      const user = { id: Math.random().toString(), email, full_name: name, role };
-      localStorage.setItem('mock_user', JSON.stringify(user));
-      return { user };
+      throw new Error("Бүртгэл хийх боломжгүй. Зөвхөн demo хаягаар нэвтэрнэ үү.");
     },
     me: async () => {
       const stored = localStorage.getItem('mock_user');
@@ -214,10 +217,7 @@ export const api = {
       console.log('Mock reset password:', email);
     },
     loginWithProvider: (provider, redirectUrl) => {
-      console.log('Mock login with provider:', provider);
-      const user = { id: '1', email: 'student@example.com', role: 'student', full_name: 'Сурагч Дорж' };
-      localStorage.setItem('mock_user', JSON.stringify(user));
-      window.location.href = redirectUrl || '/student';
+      throw new Error("Google-ээр нэвтрэх боломжгүй. Зөвхөн demo хаягаар нэвтэрнэ үү.");
     },
     redirectToLogin: (redirectUrl) => {
       window.location.href = '/login';

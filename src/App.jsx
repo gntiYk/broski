@@ -65,9 +65,9 @@ const RoleBasedHome = () => {
       
       {/* Auth pages */}
       <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/register" element={<Navigate to="/login" replace />} />
+      <Route path="/forgot-password" element={<Navigate to="/login" replace />} />
+      <Route path="/reset-password" element={<Navigate to="/login" replace />} />
 
       {/* Protected app pages */}
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/welcome" replace />} />}>
@@ -79,6 +79,7 @@ const RoleBasedHome = () => {
           <Route path="/student/booking" element={<BookingPage />} />
           <Route path="/student/calendar" element={<CalendarPage />} />
           <Route path="/student/chatbot" element={<ChatbotPage />} />
+          <Route path="/student/settings" element={<SettingsPage />} />
           
           {/* Tutor Routes */}
           <Route path="/tutor" element={<TutorDashboard />} />

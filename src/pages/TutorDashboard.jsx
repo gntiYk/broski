@@ -116,7 +116,7 @@ export default function TutorDashboard() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
       <SectionHeader 
-        title="Tutor Hub" 
+        title="Tutor" 
         action={
           <Button onClick={() => setIsLogModalOpen(true)} className="bg-primary hover:bg-primary-hover flex items-center gap-1.5 shadow-sm text-xs font-semibold">
             <Plus className="w-4 h-4" /> Log CAS Hours Manually
@@ -172,9 +172,6 @@ export default function TutorDashboard() {
             <Progress value={Math.min((serviceHours / CATEGORY_TARGET) * 100, 100)} className="h-1.5 bg-amber-500/20" indicatorClassName="bg-amber-500" />
             <div className="flex justify-between items-center mt-1">
               <p className="text-[10px] text-muted-foreground">{Math.min((serviceHours / CATEGORY_TARGET) * 100, 100).toFixed(0)}% биелсэн</p>
-              {tutoringServiceHours > 0 && (
-                <p className="text-[9px] text-amber-700 font-medium font-sans">({tutoringServiceHours.toFixed(1)}ц зааснаас)</p>
-              )}
             </div>
           </div>
         </div>
