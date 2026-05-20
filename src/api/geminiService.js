@@ -11,9 +11,9 @@ export const geminiService = {
     }
 
     try {
-      // Use the gemini-1.5-flash model for fast, capable responses
+      // Use the gemini-1.5-flash-8b model for fast, capable responses
       const model = genAI.getGenerativeModel({ 
-        model: "gemini-2.0-flash",
+        model: "gemini-1.5-flash-8b",
         systemInstruction: role === 'tutor' 
           ? "You are an AI assistant designed to help tutors manage their students, plan CAS activities, grade assignments, and structure IGCSE lesson plans."
           : "You are an AI assistant designed to help IB and IGCSE students. You act as a supportive tutor, explaining complex concepts simply, helping with homework, and brainstorming CAS project ideas."
