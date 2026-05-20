@@ -51,17 +51,11 @@ const AuthenticatedApp = () => {
     }
   }
 
-const RoleBasedHome = () => {
-  const { user } = useAuth();
-  if (user?.role === 'tutor') return <Navigate to="/tutor" replace />;
-  if (user?.role === 'student') return <Navigate to="/student" replace />;
-  return <Navigate to="/welcome" replace />;
-};
-
   return (
     <Routes>
       {/* Public pages */}
-      <Route path="/welcome" element={<Landing />} />
+      <Route path="/" element={<Landing />} />
+      <Route path="/welcome" element={<Navigate to="/" replace />} />
       
       {/* Auth pages */}
       <Route path="/login" element={<Login />} />
@@ -70,9 +64,8 @@ const RoleBasedHome = () => {
       <Route path="/reset-password" element={<Navigate to="/login" replace />} />
 
       {/* Protected app pages */}
-      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/welcome" replace />} />}>
+      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/" replace />} />}>
         <Route element={<AppLayout />}>
-          <Route path="/" element={<RoleBasedHome />} />
           
           {/* Student Routes */}
           <Route path="/student" element={<StudentDashboard />} />
