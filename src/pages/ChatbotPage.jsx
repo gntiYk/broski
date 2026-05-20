@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '@/api/apiClient';
+import { geminiService } from '@/api/geminiService';
 import { useAuth } from '@/lib/AuthContext';
 import SectionHeader from '@/components/shared/SectionHeader';
 import { Input } from '@/components/ui/input';
@@ -44,33 +45,25 @@ export default function ChatbotPage() {
       ? `You are shineUE IGCSE AI Assistant — a helpful, friendly, and expert academic tutor for middle schoolers. You help with:
 - Explaining IGCSE subjects including Mathematics, Physics, Chemistry, Biology, ESL, ICT, Global Perspectives, and Mandarin Chinese
 - Breaking down homework problems step-by-step
-- Providing study guides, exam preparation tips, and time management block schedules
 - Motivating students and keeping them engaged
 
-Do NOT mention CAS, projects, or IB under any circumstances. Keep explanations highly intuitive, visual, and simple for middle school students. Use markdown formatting and LaTeX equations (e.g. $$F = m \\cdot a$$) for math/science where appropriate. Keep responses concise and under 300 words unless detail is requested.
-
-Conversation:
-${conversationHistory}
-
-Respond as the AI Assistant:`
-      : `You are a helpful, friendly, and knowledgeable AI Assistant for tutors. You help with:
-- Tutoring guidance and academic advice
-- Project management and organization
-- Study scheduling and time management
+Do NOT mention CAS, projects, or IB under any circumstances. Keep explanations highly intuitive, visual, and simple for middle school students. Use markdown formatting.`
+      : `You are shineUE Tutor AI Assistant — a professional co-pilot for tutors. You help with:
+- Managing and grading student progress
+- Reviewing CAS project portfolios
+- Structuring lesson plans
 - Motivation and productivity tips
 
-Be concise, encouraging, and practical. Use markdown formatting for structured responses. Keep responses under 300 words unless detail is requested.
+Be concise, encouraging, and practical. Use markdown formatting for structured responses.`;
 
-Conversation:
-${conversationHistory}
-
-Respond as the AI Assistant:`;
-
-    const response = await api.chatbot.sendMessage({
-      prompt: systemPrompt,
-    });
-
-    setMessages(prev => [...prev, { role: 'assistant', content: response }]);
+    try {
+      const chatHistory = messages.map(m => ({ sender: m.role, text: m.content }));
+      // Using geminiService directly with the real SDK
+      const responseText = await geminiService.generateChatResponse(chatHistory, content, user?.role || 'student');
+      setMessages(prev => [...prev, { role: 'assistant', content: responseText }]);
+    } catch (error) {
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Oops! The AI is currently unavailable. Please make sure your Gemini API Key is configured in Vercel Environment Variables (`VITE_GEMINI_API_KEY`).' }]);
+    }
     setLoading(false);
   };
 

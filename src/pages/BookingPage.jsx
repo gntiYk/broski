@@ -78,8 +78,7 @@ export default function BookingPage() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
       <SectionHeader
-        title="Booking"
-        subtitle="Schedule tutoring sessions with available tutors"
+        title="Tutoring Sessions"
         action={<Button onClick={() => setDialogOpen(true)}><Plus className="w-4 h-4 mr-2" /> Book Session</Button>}
       />
 
