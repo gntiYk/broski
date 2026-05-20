@@ -24,20 +24,13 @@ export default function ChatbotPage() {
     'How does aerobic cell respiration work?',
     'Tips for IGCSE Chemistry atomic structure',
     'Review Mandarin Chinese tones'
-  ] : [
-    'Help me plan my CAS project',
-    'What are some creative CAS ideas?',
-    'How do I write a good CAS reflection?',
-    'Suggest a weekly study schedule',
-    'Tips for balancing CAS and academics',
-    'How many CAS hours do I need?',
-  ];
+  ] : [];
 
   useEffect(() => {
     if (user) {
       const welcome = isStudent 
         ? `Hi ${user.full_name?.split(' ')[0] || 'there'}! 👋 I'm your shineUE IGCSE AI Assistant. I can help you with your homework, IGCSE subject questions, study tips, or quiz reviews. How can I help you today?`
-        : `Hi ${user.full_name?.split(' ')[0] || 'there'}! 👋 I'm your shineUEcas AI Assistant. I can help you with CAS planning, project ideas, study schedules, reflection writing, and more. How can I help you today?`;
+        : `Hi ${user.full_name?.split(' ')[0] || 'there'}! 👋 I'm your AI Assistant. How can I help you today?`;
       setMessages([{ role: 'assistant', content: welcome }]);
     }
   }, [user, isStudent]);
@@ -72,14 +65,13 @@ Conversation:
 ${conversationHistory}
 
 Respond as the AI Assistant:`
-      : `You are shineUEcas AI Assistant — a helpful, friendly, and knowledgeable CAS (Creativity, Activity, Service) advisor for IB students. You help with:
-- CAS project planning, ideas, and reflection writing
-- Study scheduling and time management
+      : `You are a helpful, friendly, and knowledgeable AI Assistant for tutors. You help with:
 - Tutoring guidance and academic advice
+- Project management and organization
+- Study scheduling and time management
 - Motivation and productivity tips
-- Understanding CAS requirements and deadlines
 
-Be concise, encouraging, and practical. Use markdown formatting for structured responses. Keep responses under 300 words unless the student asks for detail.
+Be concise, encouraging, and practical. Use markdown formatting for structured responses. Keep responses under 300 words unless detail is requested.
 
 Conversation:
 ${conversationHistory}

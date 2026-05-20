@@ -40,7 +40,7 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
-      <SectionHeader title="Settings" subtitle="Manage your profile and preferences" />
+      <SectionHeader title="Settings" />
 
       {/* Profile Section */}
       <motion.div
@@ -84,26 +84,6 @@ export default function SettingsPage() {
           </div>
           <Button onClick={handleSave} disabled={saving}>
             <Save className="w-4 h-4 mr-2" /> {saving ? 'Saving...' : 'Save Changes'}
-          </Button>
-        </div>
-      </motion.div>
-
-      {/* Appearance */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="bg-card rounded-xl border border-border p-6"
-      >
-        <h3 className="font-heading font-semibold mb-4">Appearance</h3>
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium">Theme</p>
-            <p className="text-xs text-muted-foreground">Switch between light and dark mode</p>
-          </div>
-          <Button variant="outline" onClick={toggleTheme}>
-            {theme === 'light' ? <Moon className="w-4 h-4 mr-2" /> : <Sun className="w-4 h-4 mr-2" />}
-            {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
           </Button>
         </div>
       </motion.div>

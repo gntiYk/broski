@@ -104,34 +104,29 @@ const createPersistence = (storageKey) => {
 
 // Initialize beautiful demo data if empty
 let storedProjects = getStorageItem('broski_projects', []);
-if (storedProjects.length === 0 || !storedProjects.some(p => p.id === 'p_finance')) {
+if (storedProjects.length === 0 || !storedProjects.some(p => p.id === 'p1' && p.milestones)) {
   localStorage.setItem('broski_projects', JSON.stringify([
     {
-      id: 'p_finance',
+      id: 'p1',
       student_email: 'tutor@example.com',
-      title: 'Project Finance',
-      description: 'A long-term project to simplify the school\'s finance tracking, balance sheets, and charity sponsorship ledgers.',
+      title: 'Шинэ Үе ногоон төгөл',
+      description: 'Сургуулийнхаа цэцэрлэгт мод тарьж нийгмийн тустай үйлс хийх төсөл.',
       category: 'service',
       status: 'in_progress',
-      hours_logged: 25.5,
+      hours_logged: 0,
       target_hours: 60,
-      start_date: '2026-05-10',
-      end_date: '2026-06-20',
-      reflections: 'We have successfully completed the initial budget analysis and funding proposal as well as our digital ledger setup. Tutors are currently leading a donation drive.',
+      start_date: '2026-05-01',
+      end_date: '2026-06-30',
+      reflections: 'Төсөл маань амжилттай үргэлжилж байгаа. Мод тарихаас гадна зүлэгжүүлэлт хийж байна.',
       milestones: [
-        {id: 'm1', title: 'Initial budget analysis & funding proposal', due: '2026-05-10', status: 'completed'},
-        {id: 'm2', title: 'Digital ledger setup & accounts configuration', due: '2026-05-12', status: 'completed'},
-        {id: 'm3', title: 'Tutor donation drive & collection', due: '2026-05-18', status: 'in_progress'},
-        {id: 'm4', title: 'Charity partnerships integration', due: '2026-05-25', status: 'planned'},
-        {id: 'm5', title: 'Balance sheet generation & trial run', due: '2026-06-10', status: 'planned'},
-        {id: 'm6', title: 'Supervisor final review & signoff', due: '2026-06-15', status: 'planned'}
+        {id: 'm1', title: 'Хөрс бэлтгэх, цэцэрлэг төлөвлөх', due: '2026-05-10', status: 'planned'},
+        {id: 'm2', title: 'Модны суулгац, багаж хэрэгсэл бэлтгэх', due: '2026-05-12', status: 'planned'},
+        {id: 'm3', title: 'Эхний ээлжийн моддыг суулгах', due: '2026-05-18', status: 'planned'},
+        {id: 'm4', title: 'Зүлэгжүүлэлт, зүлэгний үр суулгах', due: '2026-05-25', status: 'planned'},
+        {id: 'm5', title: 'Усалгааны систем байгуулах', due: '2026-06-10', status: 'planned'},
+        {id: 'm6', title: 'Төслийн үр дүнгийн тайлан, зургийг нэгтгэх', due: '2026-06-15', status: 'planned'}
       ]
-    },
-    { id: 'p1', student_email: 'tutor@example.com', title: 'Шинэ Үе ногоон төгөл', description: 'Сургуулийнхаа цэцэрлэгт мод тарьж нийгмийн тустай үйлс хийх төсөл.', category: 'service', status: 'in_progress', hours_logged: 15, target_hours: 50, start_date: '2026-05-01', end_date: '2026-06-30', reflections: 'Төсөл маань амжилттай үргэлжилж байгаа. Мод тарихаас гадна зүлэгжүүлэлт хийж байна.' },
-    { id: 'p2', student_email: 'tutor@example.com', title: 'Вэбсайт хөгжүүлэлт', description: 'Сургуулийн мэдээллийн вэбсайт бэлтгэж, мэдээ мэдээллийг нийтлэх.', category: 'creativity', status: 'completed', hours_logged: 40, target_hours: 40, start_date: '2026-04-10', end_date: '2026-05-15', reflections: 'Маш сонирхолтой бүтээлч ажил байлаа.' },
-    { id: 'p3', student_email: 'tutor@example.com', title: 'Сагсан бөмбөгийн тэмцээн', description: 'Сургуулийн анги хоорондын тэмцээнд оролцож спортоор хичээллэх.', category: 'activity', status: 'in_progress', hours_logged: 12, target_hours: 30, start_date: '2026-05-10', end_date: '2026-05-25', reflections: 'Идэвхтэй дасгал хөдөлгөөн хийж байна.' },
-    { id: 'p4', student_email: 'tutor@example.com', title: 'Сургалтын аппликейшн бүтээх', description: 'Хүүхдүүдэд тоо бодож сурахад нь зориулсан интерактив тоглоом хөгжүүлэх.', category: 'creativity', status: 'in_progress', hours_logged: 30, target_hours: 50, start_date: '2026-05-01', end_date: '2026-06-15', reflections: 'Код бичих явцдаа их зүйл суралцаж байна.' },
-    { id: 'p5', student_email: 'tutor@example.com', title: 'Асрамжийн газарт туслах', description: 'Асрамжийн газрын хүүхдүүдэд ном уншиж өгөх болон Англи хэл заах.', category: 'service', status: 'completed', hours_logged: 50, target_hours: 50, start_date: '2026-03-01', end_date: '2026-04-30', reflections: 'Хүүхдүүдэд туслах маш сайхан мэдрэмж байсан.' }
+    }
   ]));
 }
 

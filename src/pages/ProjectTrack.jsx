@@ -45,8 +45,8 @@ export default function ProjectTrack() {
   const [logHoursId, setLogHoursId] = useState(null);
   const [hoursToLog, setHoursToLog] = useState('');
   
-  // Track expanded timeline project IDs. Default expand "p_finance"
-  const [expandedTimelines, setExpandedTimelines] = useState(['p_finance']);
+  // Track expanded timeline project IDs. Default expand "p1"
+  const [expandedTimelines, setExpandedTimelines] = useState(['p1']);
 
   // Fetch projects
   const { data: projects = [], isLoading } = useQuery({
@@ -172,58 +172,9 @@ export default function ProjectTrack() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
       <SectionHeader
-        title="CAS Projects & Activities"
-        subtitle="Log CAS hours, manage projects, and track your milestone timelines"
+        title="Projects"
         action={<Button onClick={openCreate} className="bg-primary hover:bg-primary-hover"><Plus className="w-4 h-4 mr-2" /> New Project</Button>}
       />
-
-      {/* ── Overall progress banner ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-primary/5 via-accent/5 to-primary/5 rounded-xl border border-border p-6"
-      >
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-          <div>
-            <h3 className="font-heading font-semibold text-base">Overall CAS Progress</h3>
-            <p className="text-xs text-muted-foreground mt-0.5">Target: {CAS_TARGET} total hours</p>
-          </div>
-          <div className="text-right">
-            <span className="text-3xl font-heading font-extrabold gradient-text">{totalHours.toFixed(1)}</span>
-            <span className="text-sm text-muted-foreground"> / {CAS_TARGET}h</span>
-          </div>
-        </div>
-        <Progress value={overallPct} className="h-3 mb-6" />
-
-        {/* Per-category bars */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {(['creativity', 'activity', 'service']).map((cat) => {
-            const cfg = categoryConfig[cat];
-            const hrs = hoursBy(cat);
-            const pct = Math.min((hrs / CATEGORY_TARGET) * 100, 100);
-            return (
-              <div key={cat} className={`rounded-lg p-4 ${cfg.light}`}>
-                <div className="flex items-center gap-2 mb-2">
-                  <div className={`w-6 h-6 rounded-md ${cfg.color} flex items-center justify-center`}>
-                    <cfg.icon className="w-3.5 h-3.5 text-white" />
-                  </div>
-                  <span className={`text-xs font-semibold ${cfg.text}`}>{cfg.label}</span>
-                  <span className="ml-auto text-xs text-muted-foreground">{hrs.toFixed(1)} / {CATEGORY_TARGET}h</span>
-                </div>
-                <div className="h-2 rounded-full bg-black/10 overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${pct}%` }}
-                    transition={{ duration: 0.8, ease: 'easeOut' }}
-                    className={`h-full rounded-full ${cfg.bar}`}
-                  />
-                </div>
-                <p className="text-[10px] text-muted-foreground mt-1">{pct.toFixed(0)}% complete</p>
-              </div>
-            );
-          })}
-        </div>
-      </motion.div>
 
       {/* ── Filter tabs ── */}
       <div className="flex gap-2 flex-wrap">

@@ -117,7 +117,6 @@ export default function TutorDashboard() {
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
       <SectionHeader 
         title="Tutor Hub" 
-        subtitle="Manage your tutoring sessions and track your CAS hours"
         action={
           <Button onClick={() => setIsLogModalOpen(true)} className="bg-primary hover:bg-primary-hover flex items-center gap-1.5 shadow-sm text-xs font-semibold">
             <Plus className="w-4 h-4" /> Log CAS Hours Manually
@@ -134,8 +133,7 @@ export default function TutorDashboard() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
           <div>
             <h3 className="font-heading font-semibold text-base flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-primary animate-pulse" />
-              Миний CAS Амжилт
+              Total Hours
             </h3>
             <p className="text-xs text-muted-foreground mt-0.5">Зорилго: {CAS_TARGET} цаг биелүүлэх (тус бүр 50 цаг)</p>
           </div>
@@ -150,9 +148,6 @@ export default function TutorDashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="rounded-lg p-4 bg-purple-500/10 border border-purple-500/10">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-6 h-6 rounded-md bg-purple-500 flex items-center justify-center">
-                <Palette className="w-3.5 h-3.5 text-white" />
-              </div>
               <span className="text-xs font-semibold text-purple-600">Creativity</span>
               <span className="ml-auto text-xs text-muted-foreground">{creativityHours.toFixed(1)} / {CATEGORY_TARGET}ц</span>
             </div>
@@ -162,9 +157,6 @@ export default function TutorDashboard() {
 
           <div className="rounded-lg p-4 bg-emerald-500/10 border border-emerald-500/10">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-6 h-6 rounded-md bg-emerald-500 flex items-center justify-center">
-                <Activity className="w-3.5 h-3.5 text-white" />
-              </div>
               <span className="text-xs font-semibold text-emerald-600">Activity</span>
               <span className="ml-auto text-xs text-muted-foreground">{activityHours.toFixed(1)} / {CATEGORY_TARGET}ц</span>
             </div>
@@ -174,9 +166,6 @@ export default function TutorDashboard() {
 
           <div className="rounded-lg p-4 bg-amber-500/10 border border-amber-500/10">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-6 h-6 rounded-md bg-amber-500 flex items-center justify-center">
-                <Heart className="w-3.5 h-3.5 text-white" />
-              </div>
               <span className="text-xs font-semibold text-amber-600">Service</span>
               <span className="ml-auto text-xs text-muted-foreground">{serviceHours.toFixed(1)} / {CATEGORY_TARGET}ц</span>
             </div>
@@ -194,7 +183,7 @@ export default function TutorDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={Users} label="Pending Requests" value={pendingBookings.length} color="chart4" delay={0} />
         <StatCard icon={Calendar} label="Upcoming Sessions" value={approvedBookings.length} color="primary" delay={0.1} />
-        <StatCard icon={CheckCircle2} label="Completed" value={completedBookings.length} trend={15} color="chart3" delay={0.2} />
+        <StatCard icon={CheckCircle2} label="Completed" value={completedBookings.length} color="chart3" delay={0.2} />
         <StatCard icon={TrendingUp} label="Total Sessions" value={bookings.length} color="accent" delay={0.3} />
       </div>
 
