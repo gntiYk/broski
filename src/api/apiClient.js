@@ -114,8 +114,8 @@ if (existingUsers && (existingUsers.includes('Дорж') || existingUsers.includ
 }
 
 // Initialize beautiful demo data if empty
-let storedProjects = getStorageItem('broski_projects', []);
-if (storedProjects.length !== 1 || storedProjects[0]?.id !== 'p1' || !storedProjects[0]?.milestones || storedProjects[0]?.reflections) {
+let storedProjects = getStorageItem('broski_projects', null);
+if (!storedProjects) {
   localStorage.setItem('broski_projects', JSON.stringify([
     {
       id: 'p1',
@@ -178,7 +178,7 @@ export const api = {
         throw new Error("Нууц үг эсвэл үүрэг буруу байна.");
       }
       
-      const user = { id: Math.random().toString(), email, role, full_name: registered.full_name };
+      const user = { ...registered, id: registered.id || Math.random().toString() };
       localStorage.setItem('mock_user', JSON.stringify(user));
       return { user };
     },
