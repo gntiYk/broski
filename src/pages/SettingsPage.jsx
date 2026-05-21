@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Save } from 'lucide-react';
+import { Save, Key } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 
@@ -15,12 +15,14 @@ export default function SettingsPage() {
   const { user, checkUserAuth } = useAuth();
   const [bio, setBio] = useState('');
   const [subjects, setSubjects] = useState('');
+  const [apiKey, setApiKey] = useState('');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (user) {
       setBio(user.bio || '');
       setSubjects(user.subjects?.join(', ') || '');
+      setApiKey(localStorage.getItem('VITE_GEMINI_API_KEY') || '');
     }
   }, [user]);
 
@@ -31,6 +33,7 @@ export default function SettingsPage() {
         bio,
         subjects: subjects.split(',').map(s => s.trim()).filter(Boolean),
       });
+      localStorage.setItem('VITE_GEMINI_API_KEY', apiKey.trim());
       if (checkUserAuth) {
         await checkUserAuth();
       }
@@ -87,6 +90,34 @@ export default function SettingsPage() {
               className="mt-1"
             />
           </div>
+
+          <div className="pt-4 border-t border-border space-y-2">
+            <div className="flex justify-between items-center">
+              <Label className="flex items-center gap-1.5">
+                <Key className="w-3.5 h-3.5 text-primary animate-pulse" />
+                Gemini API Key
+              </Label>
+              <a
+                href="https://aistudio.google.com/app/apikey"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-primary hover:underline font-medium"
+              >
+                Get a free key →
+              </a>
+            </div>
+            <Input
+              type="password"
+              value={apiKey}
+              onChange={e => setApiKey(e.target.value)}
+              placeholder="AIzaSy..."
+              className="font-mono mt-1"
+            />
+            <p className="text-xs text-muted-foreground">
+              Your key is saved locally in your browser and never sent to our servers.
+            </p>
+          </div>
+
           <Button onClick={handleSave} disabled={saving}>
             <Save className="w-4 h-4 mr-2" /> {saving ? 'Saving...' : 'Save Changes'}
           </Button>
