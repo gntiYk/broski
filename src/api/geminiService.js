@@ -1,10 +1,14 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-
-// Initialize the API with the Vercel Environment Variable
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 export const geminiService = {
+  /**
+   * @param {{sender: 'user' | 'assistant' | string, text: string}[]} history
+   * @param {string} newMessage
+   * @param {string} role
+   * @returns {Promise<string>}
+   */
   generateChatResponse: async (history, newMessage, role) => {
     const keyPreview = API_KEY ? `${API_KEY.substring(0, 10)}...` : '(empty)';
     
@@ -13,7 +17,6 @@ export const geminiService = {
     }
 
     try {
-      // Use the gemini-1.5-flash-8b model for fast, capable responses
       const model = genAI.getGenerativeModel({ 
         model: "gemini-1.5-flash-8b",
         systemInstruction: role === 'tutor' 
@@ -21,18 +24,13 @@ export const geminiService = {
           : "You are an AI assistant designed to help IB and IGCSE students. You act as a supportive tutor, explaining complex concepts simply, helping with homework, and brainstorming CAS project ideas."
       });
 
-      // Filter out the initial welcome message to ensure history starts cleanly
-      // and ensure alternating user/model pairs if possible, but mainly Gemini requires history to start with user.
-      // Easiest fix: only send previous user-model interactions, or just send a clean history.
       const validHistory = [];
       let lastRole = null;
       
       for (const msg of history) {
         const currentRole = msg.sender === 'user' ? 'user' : 'model';
-        // Skip the very first message if it's from the model (the welcome message)
         if (validHistory.length === 0 && currentRole === 'model') continue;
         
-        // Only add if it alternates (Gemini strictly requires user->model->user->model)
         if (currentRole !== lastRole) {
           validHistory.push({
             role: currentRole,
