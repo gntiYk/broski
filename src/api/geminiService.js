@@ -6,8 +6,10 @@ const genAI = new GoogleGenerativeAI(API_KEY);
 
 export const geminiService = {
   generateChatResponse: async (history, newMessage, role) => {
+    const keyPreview = API_KEY ? `${API_KEY.substring(0, 10)}...` : '(empty)';
+    
     if (!API_KEY) {
-      throw new Error("API Key missing. Please set VITE_GEMINI_API_KEY in your environment variables.");
+      throw new Error(`API Key is completely empty. Vercel did not inject VITE_GEMINI_API_KEY. Key preview: ${keyPreview}`);
     }
 
     try {
