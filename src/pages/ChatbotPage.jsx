@@ -4,7 +4,6 @@ import { api } from '@/api/apiClient';
 import { geminiService } from '@/api/geminiService';
 import { useAuth } from '@/lib/AuthContext';
 import SectionHeader from '@/components/shared/SectionHeader';
-import { Input } from '@/components/ui/input';
 import { User, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
@@ -58,7 +57,6 @@ Be concise, encouraging, and practical. Use markdown formatting for structured r
 
     try {
       const chatHistory = messages.map(m => ({ sender: m.role, text: m.content }));
-      // Using geminiService directly with the real SDK
       const responseText = await geminiService.generateChatResponse(chatHistory, content, user?.role || 'student');
       setMessages(prev => [...prev, { role: 'assistant', content: responseText }]);
     } catch (error) {
@@ -71,7 +69,7 @@ Be concise, encouraging, and practical. Use markdown formatting for structured r
     <div className="space-y-4 max-w-4xl mx-auto h-[calc(100vh-8rem)] flex flex-col">
       <SectionHeader title="AI Assistant" />
 
-      {/* Chat Messages */}
+      {}
       <div className="flex-1 overflow-y-auto rounded-xl bg-card border border-border p-4 space-y-4">
         <AnimatePresence initial={false}>
           {messages.map((msg, i) => (
@@ -130,15 +128,16 @@ Be concise, encouraging, and practical. Use markdown formatting for structured r
         <div ref={chatEndRef} />
       </div>
 
-      {/* Input */}
+      {}
       <div className="flex gap-2">
-        <Input
+        <input
+          type="text"
           placeholder="Хүссэн зүйлээ асуугаарай..."
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && sendMessage()}
           disabled={loading}
-          className="flex-1 h-12"
+          className="flex-1 h-12 rounded-md border border-border px-3 bg-transparent"
         />
       </div>
     </div>

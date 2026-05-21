@@ -8,16 +8,13 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import ThemeProvider from '@/components/ThemeProvider';
 
-// Auth pages
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
 
-// Public pages
 import Landing from '@/pages/Landing';
 
-// App pages
 import Dashboard from '@/pages/Dashboard';
 import StudentDashboard from '@/pages/StudentDashboard';
 import TutorDashboard from '@/pages/TutorDashboard';
@@ -28,7 +25,6 @@ import ChatbotPage from '@/pages/ChatbotPage';
 import NotificationsPage from '@/pages/NotificationsPage';
 import SettingsPage from '@/pages/SettingsPage';
 
-// Layout
 import AppLayout from '@/components/layout/AppLayout';
 
 const AuthenticatedApp = () => {
