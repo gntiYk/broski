@@ -56,10 +56,17 @@ Do NOT mention CAS, projects, or IB under any circumstances. Keep explanations h
 Be concise, encouraging, and practical. Use markdown formatting for structured responses.`;
 
     try {
-      const chatHistory = messages.map(m => ({ sender: m.role, text: m.content }));
+      const chatHistory = messages
+        .filter(m => m.role !== 'assistant' || m.content) // Filter out empty messages
+        .map(m => ({ 
+          sender: m.role === 'user' ? 'user' : 'assistant', 
+          text: m.content 
+        }));
+      
       const responseText = await geminiService.generateChatResponse(chatHistory, content, user?.role || 'student');
       setMessages(prev => [...prev, { role: 'assistant', content: responseText }]);
     } catch (error) {
+      console.error('Chat error:', error);
       setMessages(prev => [...prev, { role: 'assistant', content: `Oops! The AI is currently unavailable. Error details: ${error.message || error}` }]);
     }
     setLoading(false);
